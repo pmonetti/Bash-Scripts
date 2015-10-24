@@ -1,7 +1,7 @@
 #/bin/bash
 
 DIR_TO_ANALYZE=$1
-OUTPUT_DIR=/tmp/fileanalysis/
+OUTPUT_DIR=/tmp/dir_analysis/
 FIND_RES_PATH=$OUTPUT_DIR/find_results.txt
 EXTENSIONS_PATH=$OUTPUT_DIR/extensions.txt
 EXTRA_ACCUMS_PATH=$OUTPUT_DIR/extra_accumulators.txt
@@ -14,7 +14,7 @@ WITHOUT_EXTENSION_ACCUM_SIZE=0
 
 print_help()
 {
-  echo "Usage: file_analizer <DIR_TO_ANALYZE>"
+  echo "Usage: incremental_dir_analizer <DIR_TO_ANALYZE>"
 }
 
 process_file()

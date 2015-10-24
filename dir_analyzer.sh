@@ -2,7 +2,7 @@
 
 DIR_TO_ANALYZE="$1"			# Quotes are needed to escape spaces
 
-OUTPUT_DIR=/tmp/fileanalysis
+OUTPUT_DIR=/tmp/dir_analysis
 FIND_RES_PATH=$OUTPUT_DIR/find_results.txt
 EXTENSIONS_PATH=$OUTPUT_DIR/extensions.txt
 EXTRA_ACCUMS_PATH=$OUTPUT_DIR/extra_accumulators.txt
@@ -19,7 +19,7 @@ declare -A COUNTERS
 
 print_help()
 {
-  echo "Usage: file_analizer <DIR_TO_ANALYZE>"
+  echo "Usage: dir_analizer <DIR_TO_ANALYZE>"
 }
 
 process_single_file(){
@@ -171,7 +171,6 @@ fi
 rm -rf $OUTPUT_DIR
 mkdir -p $OUTPUT_DIR
 cd "$DIR_TO_ANALYZE"
-
 
 while read FILEPATH; do  
   process_single_file "\${FILEPATH}"
