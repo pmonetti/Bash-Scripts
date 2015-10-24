@@ -14,7 +14,7 @@ WITHOUT_EXTENSION_ACCUM_SIZE=0
 
 print_help()
 {
-  echo "Usage: incremental_dir_analizer <DIR_TO_ANALYZE>"
+  echo "Usage: ./incremental_dir_analizer.sh <DIR_TO_ANALYZE>"
 }
 
 process_file()

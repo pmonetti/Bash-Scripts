@@ -19,7 +19,7 @@ declare -A COUNTERS
 
 print_help()
 {
-  echo "Usage: dir_analizer <DIR_TO_ANALYZE>"
+  echo "Usage: ./dir_analizer.sh <DIR_TO_ANALYZE>"
 }
 
 process_single_file(){
