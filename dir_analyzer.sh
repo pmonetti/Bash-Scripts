@@ -56,13 +56,12 @@ process_single_file(){
     fi
     
     # Extensions with characters other than letters and numbers are excluded
-    if [[ "$TITLE" == [^a-zA-Z0-9] ]]; then
+    if [[ "$EXTENSION" =~ [^a-zA-Z0-9] ]]; then
       HAS_EXTENSION=false;
     fi    
   fi
   
   if [ "$HAS_EXTENSION" = true ] ; then
-    EXTENSION="${FILENAME##*.}"
     echo $EXTENSION
     echo $FILEPATH >> $OUTPUT_DIR/my_$EXTENSION\_files.txt       
     
