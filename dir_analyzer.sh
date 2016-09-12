@@ -1,23 +1,5 @@
 #/bin/bash
 
-OUTPUT_DIR=/tmp/dir_analysis
-FIND_RES_PATH=$OUTPUT_DIR/find_results.txt
-EXTENSIONS_PATH=$OUTPUT_DIR/extensions.txt
-EXTRA_ACCUMS_PATH=$OUTPUT_DIR/extra_accumulators.txt
-WITHOUT_EXTENSIONS_PATH=$OUTPUT_DIR/my_without_extensions_files.txt
-EXTENSION_MAX_LENGTH=5
-
-WITHOUT_EXTENSION_COUNTER=0
-WITHOUT_EXTENSION_ACCUM_SIZE=0
-TOTAL_FILES=0
-TOTAL_SIZE=0
-
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-source $SCRIPT_DIR/format_size.sh
-
-declare -A SIZES
-declare -A COUNTERS
-
 print_help()
 {
   echo "Usage: ./incremental_dir_analizer.sh <DIR_TO_ANALYZE> [-c]"
@@ -121,6 +103,24 @@ if [ "$#" -eq 2 ] && [ $2 != "-c" ] ; then
 elif [ "$#" -eq 2 ] ; then
     COLOURED=true
 fi
+
+OUTPUT_DIR=/tmp/dir_analysis
+FIND_RES_PATH=$OUTPUT_DIR/find_results.txt
+EXTENSIONS_PATH=$OUTPUT_DIR/extensions.txt
+EXTRA_ACCUMS_PATH=$OUTPUT_DIR/extra_accumulators.txt
+WITHOUT_EXTENSIONS_PATH=$OUTPUT_DIR/my_without_extensions_files.txt
+EXTENSION_MAX_LENGTH=5
+
+WITHOUT_EXTENSION_COUNTER=0
+WITHOUT_EXTENSION_ACCUM_SIZE=0
+TOTAL_FILES=0
+TOTAL_SIZE=0
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source $SCRIPT_DIR/format_size.sh
+
+declare -A SIZES
+declare -A COUNTERS
 
 # Prepare and clean the output directory; then change the current directory to the one that will be analyzed
 rm -rf $OUTPUT_DIR
