@@ -14,6 +14,7 @@ TOTAL_FILES=0
 TOTAL_SIZE=0
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source $SCRIPT_DIR/format_size.sh
 
 print_help()
 {
@@ -64,46 +65,6 @@ process_extensions()
 
   done
   echo $EXTENSION_COUNTER" extensions found: "$ALL_EXTENSIONS"."
-}
-
-bytes_to_readable_format()
-{
-  eval SIZE_IN_BYTES="$1"
-
-  if [ "$COLOURED" = false ] ; then
-    echo $SIZE_IN_BYTES | awk '{ split( "B KB MB GB" , v ); s=1; while( $1>1024 ){ $1/=1024; s++ } print int($1) " " v[s] }'
-    return
-  fi
-
-  AWK_SCRIPT='
-  function red(s) {
-      printf "\033[1;31m" s "\033[0m ";
-  }
-  function green(s) {
-      printf "\033[0;32m" s "\033[0m ";
-  }
-  function white(s) {
-      printf "\033[0;37m" s "\033[0m ";
-  }
-  {
-    split( "B KB MB GB" , v ); 
-    i=1; 
-    while( $1>1024 ){
-      $1/=1024; 
-      i++;
-    };
-    CONVFMT = "%.2f";
-    text=$1 " " v[i];
-    if(v[i] == "GB")
-      red(text);
-    else if (v[i] == "MB")
-      green(text);
-    else
-      white(text);
-  }'
-
-  echo $SIZE_IN_BYTES | awk "$AWK_SCRIPT"
-
 }
 
 init_table(){
@@ -198,7 +159,7 @@ while read EXTENSION; do
     fi
   done < $FIND_RES_PATH
 
-  HUMAN_READABLE_SIZE=$(bytes_to_readable_format "\${FILE_CLASS_SIZE}")
+  HUMAN_READABLE_SIZE=$(bytes_to_readable_format "\${FILE_CLASS_SIZE}" $COLOURED)
   printf "$ROW_FORMAT" $EXTENSION $FILE_CLASS_COUNTER "$HUMAN_READABLE_SIZE"
 
   let TOTAL_FILES=$TOTAL_FILES+$FILE_CLASS_COUNTER
@@ -208,7 +169,7 @@ done < $EXTENSIONS_PATH
 
 print_weak_table_divider
 
-HUMAN_READABLE_SIZE=$(bytes_to_readable_format $WITHOUT_EXTENSION_ACCUM_SIZE)
+HUMAN_READABLE_SIZE=$(bytes_to_readable_format $WITHOUT_EXTENSION_ACCUM_SIZE $COLOURED)
 printf "$ROW_FORMAT" "Other" $WITHOUT_EXTENSION_COUNTER "$HUMAN_READABLE_SIZE"
 
 print_strong_table_divider
@@ -216,7 +177,7 @@ print_strong_table_divider
 let TOTAL_FILES=$TOTAL_FILES+$WITHOUT_EXTENSION_COUNTER
 let TOTAL_SIZE=$TOTAL_SIZE+$((WITHOUT_EXTENSION_ACCUM_SIZE))
 
-HUMAN_READABLE_SIZE=$(bytes_to_readable_format $TOTAL_SIZE)
+HUMAN_READABLE_SIZE=$(bytes_to_readable_format $TOTAL_SIZE $COLOURED)
 printf "$ROW_FORMAT" "Total" $TOTAL_FILES "$HUMAN_READABLE_SIZE"
 echo
 

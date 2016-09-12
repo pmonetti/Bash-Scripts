@@ -15,6 +15,7 @@ TOTAL_FILES=0
 TOTAL_SIZE=0
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source $SCRIPT_DIR/format_size.sh
 
 declare -A SIZES
 declare -A COUNTERS
@@ -66,46 +67,6 @@ get_size()
 {
   eval FILEPATH="$1"			# (1)
   echo $(stat --printf="%s" "$FILEPATH")
-}
-
-bytes_to_readable_format()
-{
-  eval SIZE_IN_BYTES="$1"
-
-  if [ "$COLOURED" = false ] ; then
-    echo $SIZE_IN_BYTES | awk '{ split( "B KB MB GB" , v ); s=1; while( $1>1024 ){ $1/=1024; s++ } print int($1) " " v[s] }'
-    return
-  fi
-
-  AWK_SCRIPT='
-  function red(s) {
-      printf "\033[1;31m" s "\033[0m ";
-  }
-  function green(s) {
-      printf "\033[0;32m" s "\033[0m ";
-  }
-  function white(s) {
-      printf "\033[0;37m" s "\033[0m ";
-  }
-  {
-    split( "B KB MB GB" , v ); 
-    i=1; 
-    while( $1>1024 ){
-      $1/=1024; 
-      i++; 
-    };
-    CONVFMT = "%.2f";
-    text=$1 " " v[i];
-    if(v[i] == "GB")
-      red(text);
-    else if (v[i] == "MB")
-      green(text);
-    else
-      white(text);
-  }'
-
-  echo $SIZE_IN_BYTES | awk "$AWK_SCRIPT"
-
 }
 
 init_table(){
@@ -179,19 +140,19 @@ print_table_header
 
 while read EXTENSION; do
   FILE_CLASS_SIZE="${SIZES[$EXTENSION]}"
-  HUMAN_READABLE_SIZE=$(bytes_to_readable_format "\${FILE_CLASS_SIZE}")
+  HUMAN_READABLE_SIZE=$(bytes_to_readable_format "\${FILE_CLASS_SIZE}" $COLOURED)
   COUNT="${COUNTERS[$EXTENSION]}"
   printf "$ROW_FORMAT" $EXTENSION $COUNT "$HUMAN_READABLE_SIZE"
 done < $EXTENSIONS_PATH
 
 print_weak_table_divider
 
-HUMAN_READABLE_SIZE=$(bytes_to_readable_format "\${WITHOUT_EXTENSION_ACCUM_SIZE}")
+HUMAN_READABLE_SIZE=$(bytes_to_readable_format "\${WITHOUT_EXTENSION_ACCUM_SIZE}" $COLOURED)
 printf "$ROW_FORMAT" "Other" $WITHOUT_EXTENSION_COUNTER "$HUMAN_READABLE_SIZE"
 
 print_strong_table_divider
 
-HUMAN_READABLE_SIZE=$(bytes_to_readable_format $TOTAL_SIZE)
+HUMAN_READABLE_SIZE=$(bytes_to_readable_format $TOTAL_SIZE $COLOURED)
 printf "$ROW_FORMAT" "Total" $TOTAL_FILES "$HUMAN_READABLE_SIZE"
 echo
 
