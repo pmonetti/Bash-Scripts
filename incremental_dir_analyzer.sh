@@ -17,7 +17,8 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 print_help()
 {
-  echo "Usage: ./incremental_dir_analizer.sh <DIR_TO_ANALYZE>"
+  echo "Usage: ./incremental_dir_analizer.sh <DIR_TO_ANALYZE> [-c]"
+  echo "       -c  Coloured output"
 }
 
 process_file()
@@ -69,7 +70,11 @@ process_extensions()
 bytes_to_readable_format()
 {
   eval SIZE_IN_BYTES="$1"
-  #echo $SIZE_IN_BYTES | awk '{ split( "B KB MB GB" , v ); s=1; while( $1>1024 ){ $1/=1024; s++ } print int($1) " " v[s] }'
+
+  if [ "$COLOURED" = false ] ; then
+    echo $SIZE_IN_BYTES | awk '{ split( "B KB MB GB" , v ); s=1; while( $1>1024 ){ $1/=1024; s++ } print int($1) " " v[s] }'
+    return
+  fi
 
   AWK_SCRIPT='
   function red(s) {
@@ -110,7 +115,14 @@ init_table(){
   WEAK_TABLE_DIVIDER=$WEAK_TABLE_DIVIDER$WEAK_TABLE_DIVIDER
 
   HEADER_FORMAT="\n %"$EXTENSION_MAX_LENGTH"s %7s %11s\n"
-  ROW_FORMAT=" %"$EXTENSION_MAX_LENGTH"s %7s %23s\n"
+
+  if [ "$COLOURED" = true ] ; then
+    RIGHT_MARGIN="23"
+  else
+    RIGHT_MARGIN="11"
+  fi
+
+  ROW_FORMAT=" %"$EXTENSION_MAX_LENGTH"s %7s %"$RIGHT_MARGIN"s\n"
 
   let TABLE_WIDTH=$EXTENSION_MAX_LENGTH+21
 }
@@ -135,9 +147,18 @@ print_table_header(){
 
 # EXECUTION STARTS HERE !
 
-if [ "$#" -ne 1 ]; then
+if [ "$#" -lt 1 ] || [ "$#" -gt 2 ] ; then
     print_help
     exit
+fi
+
+COLOURED=false
+
+if [ "$#" -eq 2 ] && [ $2 != "-c" ] ; then
+    print_help
+    exit
+elif [ "$#" -eq 2 ] ; then
+    COLOURED=true
 fi
 
 # Prepare and clean the output directory; then change the current directory to the one that will be analyzed
