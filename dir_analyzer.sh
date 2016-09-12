@@ -126,7 +126,7 @@ fi
 # Prepare and clean the output directory; then change the current directory to the one that will be analyzed
 rm -rf $OUTPUT_DIR
 mkdir -p $OUTPUT_DIR
-cd "$DIR_TO_ANALYZE"
+cd "$DIR_TO_ANALYZE" || { echo 'Invalid directory'; exit 1; }
 
 # Extract all the files extensions of the files contained below the current directory and write them to $EXTENSIONS_PATH, ordered and without duplicates
 while read FILEPATH; do

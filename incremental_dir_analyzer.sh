@@ -124,7 +124,7 @@ fi
 # Prepare and clean the output directory; then change the current directory to the one that will be analyzed
 rm -rf $OUTPUT_DIR
 mkdir -p $OUTPUT_DIR
-cd $DIR_TO_ANALYZE
+cd "$DIR_TO_ANALYZE" || { echo 'Invalid directory'; exit 1; }
 echo
 
 # Extract the paths of all regular files (not dirs) below the dir to analyze and write them into $FIND_RES_PATH
