@@ -1,6 +1,5 @@
 #/bin/bash
 
-DIR_TO_ANALYZE=$1
 OUTPUT_DIR=/tmp/dir_analysis/
 FIND_RES_PATH=$OUTPUT_DIR/find_results.txt
 EXTENSIONS_PATH=$OUTPUT_DIR/extensions.txt
@@ -112,6 +111,7 @@ if [ "$#" -lt 1 ] || [ "$#" -gt 2 ] ; then
     exit
 fi
 
+DIR_TO_ANALYZE="$1"			# Quotes are needed to escape spaces
 COLOURED=false
 
 if [ "$#" -eq 2 ] && [ $2 != "-c" ] ; then
@@ -143,7 +143,7 @@ process_extensions < $EXTENSIONS_PATH
 init_table
 print_table_header
 
-while read EXTENSION; do  
+while read EXTENSION; do
   rm -f $OUTPUT_DIR/my_$EXTENSION\_files.txt
 
   FILE_CLASS_SIZE=0

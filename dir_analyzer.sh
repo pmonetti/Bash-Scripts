@@ -1,7 +1,5 @@
 #/bin/bash
 
-DIR_TO_ANALYZE="$1"			# Quotes are needed to escape spaces
-
 OUTPUT_DIR=/tmp/dir_analysis
 FIND_RES_PATH=$OUTPUT_DIR/find_results.txt
 EXTENSIONS_PATH=$OUTPUT_DIR/extensions.txt
@@ -41,7 +39,7 @@ process_single_file(){
   if [ "$HAS_EXTENSION" = "true" ] ; then
     EXTENSION="${FILENAME##*.}"
     echo $EXTENSION
-    echo $FILEPATH >> $OUTPUT_DIR/my_$EXTENSION\_files.txt       
+    echo $FILEPATH >> $OUTPUT_DIR/my_$EXTENSION\_files.txt
 
     if test "${SIZES[$EXTENSION]+isset}";
     then
@@ -114,6 +112,7 @@ if [ "$#" -lt 1 ] || [ "$#" -gt 2 ] ; then
     exit
 fi
 
+DIR_TO_ANALYZE="$1"			# Quotes are needed to escape spaces
 COLOURED=false
 
 if [ "$#" -eq 2 ] && [ $2 != "-c" ] ; then
