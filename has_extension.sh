@@ -10,7 +10,7 @@ elif [[ "$FILENAME" == "."* ]]      # Hidden files without extension
 then
   HAS_EXTENSION=false; 
 elif [[ "$FILENAME" == *"."* ]]	    # Not hidden files with extension
-then    
+then
   HAS_EXTENSION=true; 
 else				    # Not hidden files without extension
   HAS_EXTENSION=false;
@@ -28,8 +28,10 @@ if [ "$HAS_EXTENSION" = true ] ; then
   # Extensions with characters other than letters and numbers are excluded
   if [[ "$EXTENSION" =~ [^a-zA-Z0-9] ]]; then
     HAS_EXTENSION=false;
-  fi    
+  fi
 fi
+
+#echo $FILENAME"|"$HAS_EXTENSION >> /tmp/dir_analysis/has_extension_args.txt
   
 echo $HAS_EXTENSION
 
