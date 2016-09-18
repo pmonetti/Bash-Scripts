@@ -61,13 +61,14 @@ function prepare_subdir()
 
 OUTPUT_DIR=/tmp/dir_analysis
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+TEST_DIR=$SCRIPT_DIR"/testdir/"
 
-prepare_subdir $SCRIPT_DIR"/testdir/" ""
-prepare_subdir $SCRIPT_DIR"/testdir/testdir1/" "1"
-prepare_subdir $SCRIPT_DIR"/testdir/testdir1/testdir11/" "11"
-prepare_subdir $SCRIPT_DIR"/testdir/testdir1/test dir12/" "12"
-prepare_subdir $SCRIPT_DIR"/testdir/testdir1/tesTDir13/" "13"
-prepare_subdir $SCRIPT_DIR"/testdir/testd ir2/" "2"
-prepare_subdir $SCRIPT_DIR"/testdir/testd ir2/testdir21/" "21"
-prepare_subdir $SCRIPT_DIR"/testdir/testd ir2/testd ir22/" "22"
+prepare_subdir $TEST_DIR ""
+prepare_subdir $TEST_DIR"testdir1/" "1"
+prepare_subdir $TEST_DIR"testdir1/testdir11/" "11"
+prepare_subdir $TEST_DIR"testdir1/test dir12/" "12"
+prepare_subdir $TEST_DIR"testdir1/tesTDir13/" "13"
+prepare_subdir $TEST_DIR"testd ir2/" "2"
+prepare_subdir $TEST_DIR"testd ir2/testdir21/" "21"
+prepare_subdir $TEST_DIR"testd ir2/testd ir22/" "22"
 
