@@ -99,7 +99,7 @@ recursive_rm_dir()
     return
   fi
 
-  rmdir "$DIR_PATH" > /dev/null 2>&1 && echo "$DIR_PATH" "directory became empty so it was removed"
+  rmdir "$DIR_PATH" > /dev/null 2>&1 && echo "Remove Empty Dir: ""$DIR_PATH"
   DIR_ALTERED="${DIR_ALTERED%/*}"
   recursive_rm_dir "\${DIR_ALTERED}"
 }
@@ -189,9 +189,13 @@ sleep 1
 
 while IFS=$INTERNAL_FILE_SEPARATOR read -r SOURCE DEST; do
   if [ "$SOURCE" == "$DEST" ] ; then
-    echo "rm" "$SOURCE"
+    rm "$SOURCE"
+    echo "Remove: ""$SOURCE"
   else
-    echo "cp" "$SOURCE" "$DEST"
+    DESTDIR=$(dirname "${DEST}")
+    mkdir -p "$DESTDIR"
+    mv "$SOURCE" "$DEST"
+    echo "Move: ""$SOURCE"" -> ""$DEST"
   fi
 
 done < $FILES_TO_ALTER_PATH
