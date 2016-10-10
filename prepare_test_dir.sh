@@ -10,7 +10,7 @@ function prepare_subdir()
 
     mkdir -p "$DIRPATH"
 
-    PREFIX_ARRAY=( "" "with_sp_ " )
+    PREFIX_ARRAY=( "" "with_sp " )
     SUFFIX1_ARRAY=( "" "_áéíóúñ" )
 
     for PREFIX in "${PREFIX_ARRAY[@]}"
@@ -19,10 +19,10 @@ function prepare_subdir()
         do
             touch "$DIRPATH""$PREFIX""lowercase"$SUFFIX1""$SUFFIX2".txt"
             touch "$DIRPATH""$PREFIX""lowercase"$SUFFIX1""$SUFFIX2".avi"
-            touch "$DIRPATH""$PREFIX""lowercase"$SUFFIX1""$SUFFIX2".sh"
+            touch "$DIRPATH""$PREFIX""lowercase"$SUFFIX1""$SUFFIX2".exe"
             touch "$DIRPATH""$PREFIX""upper_in_BASENAME"$SUFFIX1""$SUFFIX2".ini"
             touch "$DIRPATH""$PREFIX""upper_in_extension"$SUFFIX1""$SUFFIX2".AVI"
-            touch "$DIRPATH""$PREFIX""upper_in_BOTH"$SUFFIX1""$SUFFIX2".SH"
+            touch "$DIRPATH""$PREFIX""upper_in_BOTH"$SUFFIX1""$SUFFIX2".EXE"
 
             touch "$DIRPATH""$PREFIX""lowercase_no_ext""$SUFFIX1""$SUFFIX2"
             touch "$DIRPATH""$PREFIX""upper_in_BASENAME_no_ext""$SUFFIX1""$SUFFIX2"
@@ -72,13 +72,13 @@ prepare_subdir $TEST_DIR"testd ir_áéíóúñ_4/test dir_áéíóúñ_45/" "_45
 # Directories that are expected to be removed after applying dir_manager because they get empty
 # Not all of them will be removed in every test
 mkdir -p $TEST_DIR"testdir5/testdir51/"
-touch $TEST_DIR"testdir5/testdir51/file51.sh"
+touch $TEST_DIR"testdir5/testdir51/file51.exe"
 
 mkdir -p $TEST_DIR"testdir5/testdir52/"
 touch $TEST_DIR"testdir5/testdir52/file52.avi"
 
 mkdir -p $TEST_DIR"testdir5/testdir53/"
-touch $TEST_DIR"testdir5/testdir53/file53.sh"
+touch $TEST_DIR"testdir5/testdir53/file53.exe"
 touch $TEST_DIR"testdir5/testdir53/file53.avi"
 
 
