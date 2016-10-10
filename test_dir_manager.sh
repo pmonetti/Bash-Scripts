@@ -8,6 +8,8 @@ reset_test_dir()
     rm -rf $TMP_DIR
     mkdir -p $TMP_DIR
     tree $TEST_DIR --dirsfirst --noreport > $ORIGINAL_TREE
+    cp $ORIGINAL_TREE $EXPECTED_TREE
+    replace $EXPECTED_TREE "└" "├"
 }
 
 replace()
@@ -29,8 +31,6 @@ remove_line()
 
 prepare_expected_output_1()
 {
-    cp $ORIGINAL_TREE $EXPECTED_TREE
-    replace $EXPECTED_TREE "└" "├"
     replace $EXPECTED_TREE ".AVI" ".avi"
     replace $EXPECTED_TREE ".EXE" ".exe"
     replace $EXPECTED_TREE "áéíóúñ" "aeioun"
@@ -41,8 +41,6 @@ prepare_expected_output_1()
 
 prepare_expected_output_2()
 {
-    cp $ORIGINAL_TREE $EXPECTED_TREE
-    replace $EXPECTED_TREE "└" "├"
     remove_line $EXPECTED_TREE ".EXE"
     remove_line $EXPECTED_TREE ".exe"
     remove_line $EXPECTED_TREE "testdir51"
@@ -50,8 +48,6 @@ prepare_expected_output_2()
 
 prepare_expected_output_3()
 {
-    cp $ORIGINAL_TREE $EXPECTED_TREE
-    replace $EXPECTED_TREE "└" "├"
     remove_line $EXPECTED_TREE ".AVI"
     remove_line $EXPECTED_TREE ".avi"
     remove_line $EXPECTED_TREE "testdir52"
@@ -120,8 +116,22 @@ echo "*********** Test 3 Ok ***********"
 
 # In $TEST_DIR, rename all extensions to lowercase, keep only english chars, replace all whitespaces with _,
 # removes all .exe (case insensitive) files, move all .avi (case insensitive) files to $OUTPUT_DIR
-#reset_test_dir
-#$SCRIPT_DIR/dir_manager.sh -l -k -s _ -r exe -m avi $OUTPUT_DIR $TEST_DIR
+echo "*********** Running Test 4 ***********"
+reset_test_dir
+$SCRIPT_DIR/dir_manager.sh -l -k -s _ -r exe -m avi $OUTPUT_DIR $TEST_DIR
+
+prepare_expected_output_1
+prepare_expected_output_2
+prepare_expected_output_3
+remove_line $EXPECTED_TREE "testdir5"
+tree $TEST_DIR --dirsfirst --noreport > $OUTPUT_TREE && replace $OUTPUT_TREE "└" "├"
+diff $OUTPUT_TREE $EXPECTED_TREE > /dev/null || { echo '"*********** Test 4 Failed ***********"'; exit 1; }
+
+prepare_expected_output_4
+prepare_expected_output_1
+tree $OUTPUT_DIR --dirsfirst --noreport > $OUTPUT_TREE && replace $OUTPUT_TREE "└" "├"
+diff $OUTPUT_TREE $EXPECTED_TREE > /dev/null || { echo '"*********** Test 4 Failed ***********"'; exit 1; }
+echo "*********** Test 4 Ok ***********"
 
 
 rm -rf $OUTPUT_DIR
