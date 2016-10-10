@@ -3,11 +3,11 @@
 print_help()
 {
   echo "Usage: ./dir_manager.sh [OPTIONS] <DIR_TO_PROCESS>"
-  echo -e "  -l\t\t\t\tConverts all the extensions to lowercase"
-  echo -e "  -k\t\t\t\tKeep only english characters characters in paths"
-  echo -e "  -s <term>\t\t\tReplaces with <term> all the spaces at filenames"
-  echo -e "  -r <type>\t\t\tRemoves all the files of type <type>"
-  echo -e "  -m <type> <output_dir>\tMoves to <output_dir> all files of type <type> preserving the structure of subdirectories"
+  echo -e "  -l\t\t\t\tConverts all the extensions (not dir nor file names) to lowercase in files below DIR_TO_PROCESS"
+  echo -e "  -k\t\t\t\tKeep only english characters characters in paths below DIR_TO_PROCESS"
+  echo -e "  -s <term>\t\t\tReplaces with <term> all the spaces in paths below DIR_TO_PROCESS"
+  echo -e "  -r <type>\t\t\tRemoves all the files of type <type> below DIR_TO_PROCESS"
+  echo -e "  -m <type> <output_dir>\tMoves to <output_dir> all files of type <type>, below DIR_TO_PROCESS, preserving the structure of subdirectories"
 
   echo -e "Note: All <type> parameters are case insensitive"
 }
@@ -112,6 +112,16 @@ REPL_SPACES=""
 RM_EXTENSION=""
 MV_EXTENSION=""
 MV_OUTPUT=""
+
+if [ "$#" == 0 ]; then
+    print_help
+    exit
+fi
+
+if [[ "$1" == "-h" || "$1" == "--help" ]] ; then
+    print_help
+    exit
+fi
 
 while [[ $# > 1 ]]
 do
