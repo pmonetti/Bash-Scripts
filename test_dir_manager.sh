@@ -83,53 +83,53 @@ run_test_1()
 
 run_test_2()
 {
-	# In $TEST_DIR removes all .exe (case insensitive) files
-	echo "*********** Running Test 2 ***********"
-	reset_test_dir
-	$SCRIPT_DIR/dir_manager.sh -r exe $OUTPUT_DIR $TEST_DIR
-	prepare_expected_output_2
-	tree $TEST_DIR --dirsfirst --noreport > $OUTPUT_TREE && replace_lines $OUTPUT_TREE "└" "├"
-	diff $OUTPUT_TREE $EXPECTED_TREE > /dev/null || { echo '"*********** Test 2 Failed ***********"'; exit 1; }
-	echo "*********** Test 2 Ok ***********"
+    # In $TEST_DIR removes all .exe (case insensitive) files
+    echo "*********** Running Test 2 ***********"
+    reset_test_dir
+    $SCRIPT_DIR/dir_manager.sh -r exe $OUTPUT_DIR $TEST_DIR
+    prepare_expected_output_2
+    tree $TEST_DIR --dirsfirst --noreport > $OUTPUT_TREE && replace_lines $OUTPUT_TREE "└" "├"
+    diff $OUTPUT_TREE $EXPECTED_TREE > /dev/null || { echo '"*********** Test 2 Failed ***********"'; exit 1; }
+    echo "*********** Test 2 Ok ***********"
 }
 
 run_test_3()
 {
-	# In $TEST_DIR, move all .avi (case insensitive) files to $OUTPUT_DIR
-	echo "*********** Running Test 3 ***********"
-	reset_test_dir
-	$SCRIPT_DIR/dir_manager.sh -m avi $OUTPUT_DIR $TEST_DIR
+    # In $TEST_DIR, move all .avi (case insensitive) files to $OUTPUT_DIR
+    echo "*********** Running Test 3 ***********"
+    reset_test_dir
+    $SCRIPT_DIR/dir_manager.sh -m avi $OUTPUT_DIR $TEST_DIR
 
-	prepare_expected_output_3
-	tree $TEST_DIR --dirsfirst --noreport > $OUTPUT_TREE && replace_lines $OUTPUT_TREE "└" "├"
-	diff $OUTPUT_TREE $EXPECTED_TREE > /dev/null || { echo '"*********** Test 3 Failed ***********"'; exit 1; }
+    prepare_expected_output_3
+    tree $TEST_DIR --dirsfirst --noreport > $OUTPUT_TREE && replace_lines $OUTPUT_TREE "└" "├"
+    diff $OUTPUT_TREE $EXPECTED_TREE > /dev/null || { echo '"*********** Test 3 Failed ***********"'; exit 1; }
 
-	prepare_expected_output_4
-	tree $OUTPUT_DIR --dirsfirst --noreport > $OUTPUT_TREE && replace_lines $OUTPUT_TREE "└" "├"
-	diff $OUTPUT_TREE $EXPECTED_TREE > /dev/null || { echo '"*********** Test 3 Failed ***********"'; exit 1; }
-	echo "*********** Test 3 Ok ***********"
+    prepare_expected_output_4
+    tree $OUTPUT_DIR --dirsfirst --noreport > $OUTPUT_TREE && replace_lines $OUTPUT_TREE "└" "├"
+    diff $OUTPUT_TREE $EXPECTED_TREE > /dev/null || { echo '"*********** Test 3 Failed ***********"'; exit 1; }
+    echo "*********** Test 3 Ok ***********"
 }
 
 run_test_4()
 {
-	# In $TEST_DIR, rename all extensions to lowercase, keep only english chars, replace all whitespaces with _,
-	# removes all .exe (case insensitive) files, move all .avi (case insensitive) files to $OUTPUT_DIR
-	echo "*********** Running Test 4 ***********"
-	reset_test_dir
-	$SCRIPT_DIR/dir_manager.sh -l -k -s _ -r exe -m avi $OUTPUT_DIR $TEST_DIR
+    # In $TEST_DIR, rename all extensions to lowercase, keep only english chars, replace all whitespaces with _,
+    # removes all .exe (case insensitive) files, move all .avi (case insensitive) files to $OUTPUT_DIR
+    echo "*********** Running Test 4 ***********"
+    reset_test_dir
+    $SCRIPT_DIR/dir_manager.sh -l -k -s _ -r exe -m avi $OUTPUT_DIR $TEST_DIR
 
-	prepare_expected_output_1
-	prepare_expected_output_2
-	prepare_expected_output_3
-	remove_lines $EXPECTED_TREE "testdir5"
-	tree $TEST_DIR --dirsfirst --noreport > $OUTPUT_TREE && replace_lines $OUTPUT_TREE "└" "├"
-	diff $OUTPUT_TREE $EXPECTED_TREE > /dev/null || { echo '"*********** Test 4 Failed ***********"'; exit 1; }
+    prepare_expected_output_1
+    prepare_expected_output_2
+    prepare_expected_output_3
+    remove_lines $EXPECTED_TREE "testdir5"
+    tree $TEST_DIR --dirsfirst --noreport > $OUTPUT_TREE && replace_lines $OUTPUT_TREE "└" "├"
+    diff $OUTPUT_TREE $EXPECTED_TREE > /dev/null || { echo '"*********** Test 4 Failed ***********"'; exit 1; }
 
-	prepare_expected_output_4
-	prepare_expected_output_1
-	tree $OUTPUT_DIR --dirsfirst --noreport > $OUTPUT_TREE && replace_lines $OUTPUT_TREE "└" "├"
-	diff $OUTPUT_TREE $EXPECTED_TREE > /dev/null || { echo '"*********** Test 4 Failed ***********"'; exit 1; }
-	echo "*********** Test 4 Ok ***********"
+    prepare_expected_output_4
+    prepare_expected_output_1
+    tree $OUTPUT_DIR --dirsfirst --noreport > $OUTPUT_TREE && replace_lines $OUTPUT_TREE "└" "├"
+    diff $OUTPUT_TREE $EXPECTED_TREE > /dev/null || { echo '"*********** Test 4 Failed ***********"'; exit 1; }
+    echo "*********** Test 4 Ok ***********"
 }
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
