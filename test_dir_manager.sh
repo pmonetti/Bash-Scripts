@@ -71,14 +71,14 @@ prepare_expected_output_4()
 
 run_test_1()
 {
-	# In $TEST_DIR, rename all extensions to lowercase, keep only english chars and replace all whitespaces with _
-	echo "*********** Running Test 1 ***********"
-	reset_test_dir
-	$SCRIPT_DIR/dir_manager.sh -l -k -s _ $OUTPUT_DIR $TEST_DIR
-	prepare_expected_output_1
-	tree $TEST_DIR --dirsfirst --noreport > $OUTPUT_TREE  && replace_lines $OUTPUT_TREE "└" "├"
-	diff $OUTPUT_TREE $EXPECTED_TREE > /dev/null || { echo '"*********** Test 1 Failed ***********"'; exit 1; }
-	echo "*********** Test 1 Ok ***********"
+    # In $TEST_DIR, rename all extensions to lowercase, keep only english chars and replace all whitespaces with _
+    echo "*********** Running Test 1 ***********"
+    reset_test_dir
+    $SCRIPT_DIR/dir_manager.sh -l -k -s _ $OUTPUT_DIR $TEST_DIR
+    prepare_expected_output_1
+    tree $TEST_DIR --dirsfirst --noreport > $OUTPUT_TREE  && replace_lines $OUTPUT_TREE "└" "├"
+    diff $OUTPUT_TREE $EXPECTED_TREE > /dev/null || { echo '"*********** Test 1 Failed ***********"'; exit 1; }
+    echo "*********** Test 1 Ok ***********"
 }
 
 run_test_2()
