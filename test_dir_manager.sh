@@ -152,7 +152,7 @@ run_test_4()
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 TEST_DIR=$SCRIPT_DIR/testdir
 OUTPUT_DIR=$SCRIPT_DIR/output
-TMP_DIR=/tmp/dir_manager
+TMP_DIR=/tmp/test_dir_manager
 ORIGINAL_TREE=$TMP_DIR/original_tree.txt
 EXPECTED_TREE=$TMP_DIR/expected_tree.txt
 OUTPUT_TREE=$TMP_DIR/output_tree.txt

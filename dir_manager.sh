@@ -8,6 +8,7 @@ print_help()
   echo -e "  -s <term>\t\t\tReplaces with <term> all the spaces in paths below DIR_TO_PROCESS"
   echo -e "  -r <type>\t\t\tRemoves all the files of type <type> below DIR_TO_PROCESS"
   echo -e "  -m <type> <output_dir>\tMoves to <output_dir> all files of type <type>, below DIR_TO_PROCESS, preserving the structure of subdirectories"
+  echo -e "  -v\t\t\t\tVerbose output"
 
   echo -e "Note: All <type> parameters are case insensitive"
 }
@@ -31,19 +32,31 @@ keep_english_chars()
   echo $ENGLISH_STR
 }
 
+is_relative_path()
+{
+    INPUT_PATH=$1
+    if [[ "$INPUT_PATH" = /* ]]; then
+        return 1    # false = 1
+    else
+        return 0    # true = 0
+    fi
+}
+
+invalid_dir_path()
+{
+    INPUT_PATH=$1
+    if [ -d "$INPUT_PATH" ] ; then
+        return 1    # false = 1
+    else
+        return 0    # true = 0
+    fi
+}
+
 get_external_path()
 {
     OUT_DIR=$1
     RELATIVE_FILEPATH=$2
-
-    if [[ "${OUT_DIR:0:1}" == / || "${OUT_DIR:0:2}" == ~[/a-z] ]] ; then
-      ABS_OUT_DIR=$OUT_DIR
-    else
-      CURRENT_DIR=${PWD}
-      ABS_OUT_DIR="$CURRENT_DIR"/"$OUT_DIR"
-    fi
-
-    echo $ABS_OUT_DIR"/"$RELATIVE_FILEPATH   
+    echo $OUT_DIR"/"$RELATIVE_FILEPATH
 }
 
 process_single_file()
@@ -99,7 +112,7 @@ recursive_rm_dir()
     return
   fi
 
-  rmdir "$DIR_PATH" > /dev/null 2>&1 && echo "Remove Empty Dir: ""$DIR_PATH"
+  rmdir "$DIR_PATH" > /dev/null 2>&1 && if [ "$VERBOSE" = true ] ; then echo "Remove Empty Dir: ""$DIR_PATH"; fi
   DIR_ALTERED="${DIR_ALTERED%/*}"
   recursive_rm_dir "\${DIR_ALTERED}"
 }
@@ -112,6 +125,7 @@ REPL_SPACES=""
 RM_EXTENSION=""
 MV_EXTENSION=""
 MV_OUTPUT=""
+VERBOSE=false
 
 if [ "$#" == 0 ]; then
     print_help
@@ -153,6 +167,10 @@ do
       shift 				# past argument 2
       ;;
 
+      -v|--verbose)
+      VERBOSE=true
+      ;;
+
       *)
 					# unknown option
       ;;
@@ -166,8 +184,13 @@ if [ "$#" -ne 1 ]; then
     exit
 fi
 
-DIR_TO_ANALYZE="$1"			# Quotes are needed to escape spaces
-OUTPUT_DIR=/tmp/dir_analysis
+if [ -n "$MV_OUTPUT" ] && is_relative_path "$MV_OUTPUT" ; then
+    CURRENT_DIR=${PWD}
+    MV_OUTPUT="$CURRENT_DIR"/"$MV_OUTPUT"
+fi
+
+DIR_TO_ADMIN="$1"			# Quotes are needed to escape spaces
+OUTPUT_DIR=/tmp/dir_manager
 FILES_TO_ALTER_PATH=$OUTPUT_DIR/files_to_alter.txt
 DIRS_TO_ALTER_PATH=$OUTPUT_DIR/dirs_to_alter.txt
 EXTENSION_MAX_LENGTH=5
@@ -176,12 +199,14 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 rm -rf $OUTPUT_DIR
 mkdir -p $OUTPUT_DIR
-cd "$DIR_TO_ANALYZE" || { echo 'Invalid directory'; exit 1; }
+cd "$DIR_TO_ADMIN" >> /dev/null 2>&1 || { echo "ERROR: ""$DIR_TO_ADMIN"" is not a valid directory to operate on."; exit 1; }
 
 RM_EXTENSION=$(to_lower "$RM_EXTENSION")
 MV_EXTENSION=$(to_lower "$MV_EXTENSION")
 
-while read FILEPATH; do  
+touch $FILES_TO_ALTER_PATH
+
+while read FILEPATH; do
   process_single_file "\${FILEPATH}"
 done < <(find -type f)  > >(awk '!a[$0]++' | sort > $DIRS_TO_ALTER_PATH)
 
@@ -190,12 +215,12 @@ sleep 1
 while IFS=$INTERNAL_FILE_SEPARATOR read -r SOURCE DEST; do
   if [ "$SOURCE" == "$DEST" ] ; then
     rm "$SOURCE"
-    echo "Remove: ""$SOURCE"
+    if [ "$VERBOSE" = true ] ; then echo "Remove: ""$SOURCE"; fi
   else
     DESTDIR=$(dirname "${DEST}")
     mkdir -p "$DESTDIR"
     mv "$SOURCE" "$DEST"
-    echo "Move: ""$SOURCE"" -> ""$DEST"
+    if [ "$VERBOSE" = true ] ; then echo "Move: ""$SOURCE"" -> ""$DEST"; fi
   fi
 
 done < $FILES_TO_ALTER_PATH

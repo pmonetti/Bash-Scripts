@@ -31,7 +31,5 @@ if [ "$HAS_EXTENSION" = true ] ; then
   fi
 fi
 
-#echo $FILENAME"|"$HAS_EXTENSION >> /tmp/dir_analysis/has_extension_args.txt
-  
 echo $HAS_EXTENSION
 
