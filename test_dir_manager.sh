@@ -10,7 +10,7 @@ replace_lines()
 }
 
 # Removes all lines, from the specified file $1, that contains the specified substring $2
-remove_lines()
+rm_lines()
 {
     FILEPATH=$1
     SUBSTRING=$2
@@ -18,7 +18,7 @@ remove_lines()
     cp $REPLACE_TMP_FILE $FILEPATH
 }
 
-prepare_expected_output_1()
+prepare_expected_data_1()
 {
     replace_lines $EXPECTED_TREE ".AVI" ".avi"
     replace_lines $EXPECTED_TREE ".EXE" ".exe"
@@ -28,35 +28,32 @@ prepare_expected_output_1()
     replace_lines $EXPECTED_TREE "test dir" "test_dir"
 }
 
-prepare_expected_output_2()
+prepare_expected_data_2()
 {
-    remove_lines $EXPECTED_TREE ".EXE"
-    remove_lines $EXPECTED_TREE ".exe"
-    remove_lines $EXPECTED_TREE "testdir51"
+    rm_lines $EXPECTED_TREE ".EXE"
+    rm_lines $EXPECTED_TREE ".exe"
+    rm_lines $EXPECTED_TREE "testdir51"
 }
 
-prepare_expected_output_3()
+prepare_expected_data_3()
 {
-    remove_lines $EXPECTED_TREE ".AVI"
-    remove_lines $EXPECTED_TREE ".avi"
-    remove_lines $EXPECTED_TREE "testdir52"
+    rm_lines $EXPECTED_TREE ".AVI"
+    rm_lines $EXPECTED_TREE ".avi"
+    rm_lines $EXPECTED_TREE "testdir52"
 }
 
-prepare_expected_output_4()
+prepare_expected_data_4()
 {
-    cp $ORIGINAL_TREE $EXPECTED_TREE
-    replace_lines $EXPECTED_TREE "└" "├"
     replace_lines $EXPECTED_TREE "$TEST_DIR" "$OUTPUT_DIR"
-    remove_lines $EXPECTED_TREE ".txt"
-    remove_lines $EXPECTED_TREE ".exe"
-    remove_lines $EXPECTED_TREE ".ini"
-    remove_lines $EXPECTED_TREE ".EXE"
-    remove_lines $EXPECTED_TREE "no_ext"
-    remove_lines $EXPECTED_TREE ".xlextension"
-    remove_lines $EXPECTED_TREE ".XLEXTENSION"
-    remove_lines $EXPECTED_TREE "testdir51"
+    rm_lines $EXPECTED_TREE ".txt"
+    rm_lines $EXPECTED_TREE ".exe"
+    rm_lines $EXPECTED_TREE ".ini"
+    rm_lines $EXPECTED_TREE ".EXE"
+    rm_lines $EXPECTED_TREE "no_ext"
+    rm_lines $EXPECTED_TREE ".xlextension"
+    rm_lines $EXPECTED_TREE ".XLEXTENSION"
+    rm_lines $EXPECTED_TREE "testdir51"
 }
-
 
 # Replaces in the tree descripted in the specified file $1 all ocurrences of "└" with "├"
 # to make it easier the tests validations
@@ -64,6 +61,12 @@ normalize_tree()
 {
     TREE_FILE=$1
     replace_lines $TREE_FILE "└" "├"
+}
+
+initialize_expected_tree()
+{
+    cp $ORIGINAL_TREE $EXPECTED_TREE
+    normalize_tree $EXPECTED_TREE
 }
 
 # Generates a tree file $2 from specified directory $1
@@ -74,21 +77,18 @@ generate_tree()
     tree $INPUT_DIR --dirsfirst --noreport > $TREE_FILE && normalize_tree $TREE_FILE
 }
 
-reset_test_dir()
+init_test()
 {
+    TEST_NUMBER=$1
+    echo "*** Running Test "$TEST_NUMBER": "
+
+    rm -rf $TMP_DIR && mkdir -p $TMP_DIR    
     rm -rf $OUTPUT_DIR
     rm -rf $TEST_DIR
-    $SCRIPT_DIR/prepare_test_dir.sh
-    rm -rf $TMP_DIR
-    mkdir -p $TMP_DIR
-    tree $TEST_DIR --dirsfirst --noreport > $ORIGINAL_TREE
-    cp $ORIGINAL_TREE $EXPECTED_TREE
-    normalize_tree $EXPECTED_TREE
-}
 
-print_test_title()
-{
-    echo -n "*** Running Test "$1": "
+    $SCRIPT_DIR/prepare_test_dir.sh
+
+    tree $TEST_DIR --dirsfirst --noreport > $ORIGINAL_TREE   
 }
 
 print_ok()
@@ -96,61 +96,59 @@ print_ok()
     echo "$(tput setaf 2)OK$(tput sgr 0)"
 }
 
-print_failed()
-{
-    echo "$(tput setaf 1)FAILED!$(tput sgr 0)"
-}
-
 exit_test()
 {
-    print_failed
+    echo "$(tput setaf 1)FAILED!$(tput sgr 0)"
     exit 1
 }
 
 compare_output_vs_expected()
 {
+    DIR_TO_EVALUATE_PATH=$1
+    generate_tree $DIR_TO_EVALUATE_PATH $OUTPUT_TREE
     diff $OUTPUT_TREE $EXPECTED_TREE >> /dev/null 2>&1 || exit_test
 }
 
 run_test_1()
 {
     # In $TEST_DIR, rename all extensions to lowercase, keep only english chars and replace all whitespaces with _
-    print_test_title "1"
-    reset_test_dir
+    init_test "1"
+    initialize_expected_tree
+    prepare_expected_data_1
+
     $SCRIPT_DIR/dir_manager.sh -l -k -s _ $OUTPUT_DIR $TEST_DIR
-    prepare_expected_output_1
-    generate_tree $TEST_DIR $OUTPUT_TREE
-    compare_output_vs_expected
+
+    compare_output_vs_expected $TEST_DIR
     print_ok
 }
 
 run_test_2()
 {
     # In $TEST_DIR removes all .exe (case insensitive) files
-    print_test_title "2"
-    reset_test_dir
+    init_test "2"
+    initialize_expected_tree
+    prepare_expected_data_2
+
     $SCRIPT_DIR/dir_manager.sh -r exe $OUTPUT_DIR $TEST_DIR
-    prepare_expected_output_2
-    generate_tree $TEST_DIR $OUTPUT_TREE
-    compare_output_vs_expected
+
+    compare_output_vs_expected $TEST_DIR
     print_ok
 }
 
 run_test_3()
 {
     # In $TEST_DIR, move all .avi (case insensitive) files to $OUTPUT_DIR
-    print_test_title "3"
-    reset_test_dir
+    init_test "3"
+    initialize_expected_tree
+    prepare_expected_data_3
 
     $SCRIPT_DIR/dir_manager.sh -m avi $OUTPUT_DIR $TEST_DIR
 
-    prepare_expected_output_3
-    generate_tree $TEST_DIR $OUTPUT_TREE
-    compare_output_vs_expected
+    compare_output_vs_expected $TEST_DIR
 
-    prepare_expected_output_4
-    generate_tree $OUTPUT_DIR $OUTPUT_TREE
-    compare_output_vs_expected
+    initialize_expected_tree
+    prepare_expected_data_4
+    compare_output_vs_expected $OUTPUT_DIR
     print_ok
 }
 
@@ -158,22 +156,21 @@ run_test_4()
 {
     # In $TEST_DIR, rename all extensions to lowercase, keep only english chars, replace all whitespaces with _,
     # removes all .exe (case insensitive) files, move all .avi (case insensitive) files to $OUTPUT_DIR
-    print_test_title "4"
-    reset_test_dir
+    init_test "4"
+    initialize_expected_tree
+    prepare_expected_data_1
+    prepare_expected_data_2
+    prepare_expected_data_3
+    rm_lines $EXPECTED_TREE "testdir5"    
 
     $SCRIPT_DIR/dir_manager.sh -l -k -s _ -r exe -m avi $OUTPUT_DIR $TEST_DIR
 
-    prepare_expected_output_1
-    prepare_expected_output_2
-    prepare_expected_output_3
-    remove_lines $EXPECTED_TREE "testdir5"
-    generate_tree $TEST_DIR $OUTPUT_TREE
-    compare_output_vs_expected
+    compare_output_vs_expected $TEST_DIR
 
-    prepare_expected_output_4
-    prepare_expected_output_1
-    generate_tree $OUTPUT_DIR $OUTPUT_TREE
-    compare_output_vs_expected
+    initialize_expected_tree
+    prepare_expected_data_4
+    prepare_expected_data_1
+    compare_output_vs_expected $OUTPUT_DIR
     print_ok
 }
 
