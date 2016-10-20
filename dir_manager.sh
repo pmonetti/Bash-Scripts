@@ -112,7 +112,7 @@ recursive_rm_dir()
     return
   fi
 
-  rmdir "$DIR_PATH" > /dev/null 2>&1 && if [ "$VERBOSE" = true ] ; then echo "Remove Empty Dir: ""$DIR_PATH"; fi
+  rmdir "$DIR_PATH" > /dev/null 2>&1 && echo "$DIR_PATH" > $DIRS_TO_REMOVE_PATH
   DIR_ALTERED="${DIR_ALTERED%/*}"
   recursive_rm_dir "\${DIR_ALTERED}"
 }
@@ -193,6 +193,7 @@ DIR_TO_ADMIN="$1"			# Quotes are needed to escape spaces
 OUTPUT_DIR=/tmp/dir_manager
 FILES_TO_ALTER_PATH=$OUTPUT_DIR/files_to_alter.txt
 DIRS_TO_ALTER_PATH=$OUTPUT_DIR/dirs_to_alter.txt
+DIRS_TO_REMOVE_PATH=$OUTPUT_DIR/dirs_to_remove.txt
 EXTENSION_MAX_LENGTH=5
 INTERNAL_FILE_SEPARATOR='|'
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -204,7 +205,10 @@ cd "$DIR_TO_ADMIN" >> /dev/null 2>&1 || { echo "ERROR: ""$DIR_TO_ADMIN"" is not 
 RM_EXTENSION=$(to_lower "$RM_EXTENSION")
 MV_EXTENSION=$(to_lower "$MV_EXTENSION")
 
+# Create accumulative files to avoid future errors in case of no containing records
 touch $FILES_TO_ALTER_PATH
+touch $DIRS_TO_ALTER_PATH
+touch $DIRS_TO_REMOVE_PATH
 
 while read FILEPATH; do
   process_single_file "\${FILEPATH}"
@@ -212,23 +216,34 @@ done < <(find -type f)  > >(awk '!a[$0]++' | sort > $DIRS_TO_ALTER_PATH)
 
 sleep 1
 
+RM_COUNT=0
+MV_COUNT=0
 while IFS=$INTERNAL_FILE_SEPARATOR read -r SOURCE DEST; do
   if [ "$SOURCE" == "$DEST" ] ; then
     rm "$SOURCE"
+    let RM_COUNT=$RM_COUNT+1
     if [ "$VERBOSE" = true ] ; then echo "Remove: ""$SOURCE"; fi
   else
     DESTDIR=$(dirname "${DEST}")
     mkdir -p "$DESTDIR"
     mv "$SOURCE" "$DEST"
+    let MV_COUNT=$MV_COUNT+1
     if [ "$VERBOSE" = true ] ; then echo "Move: ""$SOURCE"" -> ""$DEST"; fi
   fi
-
 done < $FILES_TO_ALTER_PATH
 
 while read DIR_ALTERED; do
     recursive_rm_dir "\${DIR_ALTERED}"
 done < $DIRS_TO_ALTER_PATH
 
+RMDIR_COUNT=0
+while read REMOVED_DIR_PATH; do
+    let RMDIR_COUNT=$RMDIR_COUNT+1
+    if [ "$VERBOSE" = true ] ; then echo "Remove Empty Dir: ""$REMOVED_DIR_PATH"; fi
+done < $DIRS_TO_REMOVE_PATH
 
+echo $RM_COUNT" files removed"
+echo $MV_COUNT" files moved"
+echo $RMDIR_COUNT" directories removed"
 
 # (1) This complex line is needed to avoid having problems with filenames that contains spaces
