@@ -183,10 +183,10 @@ EXPECTED_TREE=$TMP_DIR/expected_tree.txt
 OUTPUT_TREE=$TMP_DIR/output_tree.txt
 REPLACE_TMP_FILE=$TMP_DIR/replace_tmp_file.txt
 
-run_test_1
-run_test_2
-run_test_3
-run_test_4
+run_test_1  # 0 files removed, 1160 files moved, 21 directories removed
+run_test_2	# 202 files removed, 0 files moved, 1 directories removed
+run_test_3  # 0 files removed, 202 files moved, 1 directories removed
+run_test_4  # 202 files removed, 970 files moved, 25 directories removed
 
 rm -rf $OUTPUT_DIR
 rm -rf $TEST_DIR

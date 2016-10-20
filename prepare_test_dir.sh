@@ -39,6 +39,9 @@ OUTPUT_DIR=/tmp/dir_analysis
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 TEST_DIR=$SCRIPT_DIR"/testdir/"
 
+# 24 directories are created, each one with 48 files = 1152 files
+# Other 48 files are added to the TEST_DIR
+
 prepare_subdir $TEST_DIR ""
 
 prepare_subdir $TEST_DIR"testdir1/" "_1"
@@ -69,6 +72,7 @@ prepare_subdir $TEST_DIR"testd ir_áéíóúñ_4/tesTDir43/" "_43"
 prepare_subdir $TEST_DIR"testd ir_áéíóúñ_4/testdir_áéíóúñ_44/" "_44"
 prepare_subdir $TEST_DIR"testd ir_áéíóúñ_4/test dir_áéíóúñ_45/" "_45"
 
+
 # Directories that are expected to be removed after applying dir_manager because they get empty
 # Not all of them will be removed in every test
 mkdir -p $TEST_DIR"testdir5/testdir51/"
@@ -80,5 +84,7 @@ touch $TEST_DIR"testdir5/testdir52/file52.avi"
 mkdir -p $TEST_DIR"testdir5/testdir53/"
 touch $TEST_DIR"testdir5/testdir53/file53.exe"
 touch $TEST_DIR"testdir5/testdir53/file53.avi"
+
+# 28 directories and 1204 files created in total
 
 
