@@ -112,7 +112,7 @@ recursive_rm_dir()
     return
   fi
 
-  rmdir "$DIR_PATH" && echo "$DIR_PATH" >> $DIRS_TO_REMOVE_PATH
+  rmdir "$DIR_PATH" > /dev/null 2>&1 && echo "$DIR_PATH" >> $DIRS_TO_REMOVE_PATH
   DIR_ALTERED="${DIR_ALTERED%/*}"
   recursive_rm_dir "\${DIR_ALTERED}"
 }

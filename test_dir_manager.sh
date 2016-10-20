@@ -82,7 +82,7 @@ init_test()
     TEST_NUMBER=$1
     echo "*** Running Test "$TEST_NUMBER": "
 
-    rm -rf $TMP_DIR && mkdir -p $TMP_DIR    
+    rm -rf $TMP_DIR && mkdir -p $TMP_DIR
     rm -rf $OUTPUT_DIR
     rm -rf $TEST_DIR
 
@@ -161,7 +161,7 @@ run_test_4()
     prepare_expected_data_1
     prepare_expected_data_2
     prepare_expected_data_3
-    rm_lines $EXPECTED_TREE "testdir5"    
+    rm_lines $EXPECTED_TREE "testdir5"
 
     $SCRIPT_DIR/dir_manager.sh -l -k -s _ -r exe -m avi $OUTPUT_DIR $TEST_DIR
 
