@@ -2,7 +2,7 @@
 
 print_help()
 {
-  echo "Usage: ./incremental_dir_analizer.sh <DIR_TO_ANALYZE> [-c]"
+  echo "Usage: ./dir_analizer.sh <DIR_TO_ANALYZE> [-c]"
   echo "       -c  Coloured output"
 }
 
