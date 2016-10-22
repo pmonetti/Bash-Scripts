@@ -91,7 +91,7 @@ print_table_header(){
 
 if [ "$#" -lt 1 ] || [ "$#" -gt 2 ] ; then
     print_help
-    exit
+    exit 1
 fi
 
 DIR_TO_ANALYZE="$1"			# Quotes are needed to escape spaces
@@ -99,7 +99,7 @@ COLOURED=false
 
 if [ "$#" -eq 2 ] && [ $2 != "-c" ] ; then
     print_help
-    exit
+    exit 1
 elif [ "$#" -eq 2 ] ; then
     COLOURED=true
 fi
