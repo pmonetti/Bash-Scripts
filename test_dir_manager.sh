@@ -116,7 +116,7 @@ run_test_1()
     initialize_expected_tree
     prepare_expected_data_1
 
-    $SCRIPT_DIR/dir_manager.sh -l -k -s _ $OUTPUT_DIR $TEST_DIR
+    $SCRIPT_DIR/dir_manager.sh -l -k -s _ $TEST_DIR
 
     compare_output_vs_expected $TEST_DIR
     print_ok
@@ -129,7 +129,7 @@ run_test_2()
     initialize_expected_tree
     prepare_expected_data_2
 
-    $SCRIPT_DIR/dir_manager.sh -r exe $OUTPUT_DIR $TEST_DIR
+    $SCRIPT_DIR/dir_manager.sh -r exe $TEST_DIR
 
     compare_output_vs_expected $TEST_DIR
     print_ok
