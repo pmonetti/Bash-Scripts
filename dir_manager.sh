@@ -3,12 +3,12 @@
 print_help()
 {
   echo "Usage: ./dir_manager.sh [OPTIONS] <DIR_TO_PROCESS>"
-  echo -e "  -l\t\t\t\tConverts all the extensions (not dir nor file names) to lowercase in files below DIR_TO_PROCESS"
-  echo -e "  -k\t\t\t\tKeep only english characters characters in paths below DIR_TO_PROCESS"
-  echo -e "  -s <term>\t\t\tReplaces with <term> all the spaces in paths below DIR_TO_PROCESS"
-  echo -e "  -r <type>\t\t\tRemoves all the files of type <type> below DIR_TO_PROCESS"
-  echo -e "  -m <type> <output_dir>\tMoves to <output_dir> all files of type <type>, below DIR_TO_PROCESS, preserving the structure of subdirectories"
-  echo -e "  -v\t\t\t\tVerbose output"
+  echo -e "  -l, --lowercase\t\t\t\tConverts all the extensions (not dir nor file names) to lowercase in files below DIR_TO_PROCESS"
+  echo -e "  -k, --keepenglish\t\t\t\tKeep only english characters characters in paths below DIR_TO_PROCESS"
+  echo -e "  -s, --spaces <term>\t\t\t\tReplaces with <term> all the spaces in paths below DIR_TO_PROCESS"
+  echo -e "  -r, --remextension <type>\t\t\tRemoves all the files of type <type> below DIR_TO_PROCESS"
+  echo -e "  -m, --mvoutput <type> <output_dir>\t\tMoves to <output_dir> all files of type <type>, below DIR_TO_PROCESS, preserving the structure of subdirectories"
+  echo -e "  -v, --verbose\t\t\t\t\tVerbose output"
 
   echo -e "Note: All <type> parameters are case insensitive"
 }
@@ -127,21 +127,14 @@ MV_EXTENSION=""
 MV_OUTPUT=""
 VERBOSE=false
 
-if [ "$#" == 0 ]; then
-    print_help
-    exit
-fi
-
-if [[ "$1" == "-h" || "$1" == "--help" ]] ; then
-    print_help
-    exit
-fi
-
 while [[ $# > 1 ]]
 do
   KEY="$1"
 
   case $KEY in
+      -h|--help)
+      ;;
+
       -k|--keepenglish)
       KEEP_ENGLISH_CHARS=true
       ;;
@@ -171,12 +164,14 @@ do
       VERBOSE=true
       ;;
 
-      *)
-					# unknown option
+      *)                                # unknown option
+      echo "Unknown Option: "$KEY
+      print_help
+      exit
       ;;
   esac
 
-  shift # past argument or value
+  shift                                 # past argument or value
 done
 
 if [ "$#" -ne 1 ]; then
@@ -244,6 +239,6 @@ done < $DIRS_TO_REMOVE_PATH
 
 echo $RM_COUNT" files removed"
 echo $MV_COUNT" files moved"
-echo $RMDIR_COUNT" directories removed"
+echo $RMDIR_COUNT" directories removed after becoming empty"
 
 # (1) This complex line is needed to avoid having problems with filenames that contains spaces
