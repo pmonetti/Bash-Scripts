@@ -167,7 +167,7 @@ do
       *)                                # unknown option
       echo "Unknown Option: "$KEY
       print_help
-      exit
+      exit 1
       ;;
   esac
 
@@ -176,7 +176,7 @@ done
 
 if [ "$#" -ne 1 ]; then
     print_help
-    exit
+    exit 1
 fi
 
 if [ -n "$MV_OUTPUT" ] && is_relative_path "$MV_OUTPUT" ; then
