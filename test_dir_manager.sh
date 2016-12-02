@@ -3,92 +3,92 @@
 # Replaces in all the lines, from the specified file $1, $2 with $3
 replace_lines()
 {
-    FILEPATH=$1
-    OLD=$2
-    NEW=$3
-    sed -i "s|$OLD|$NEW|g" $FILEPATH
+    FILEPATH="$1"
+    OLD="$2"
+    NEW="$3"
+    sed -i "s|$OLD|$NEW|g" "$FILEPATH"
 }
 
 # Removes all lines, from the specified file $1, that contains the specified substring $2
 rm_lines()
 {
-    FILEPATH=$1
-    SUBSTRING=$2
-    sed "/$SUBSTRING/d" $FILEPATH > $REPLACE_TMP_FILE
-    cp $REPLACE_TMP_FILE $FILEPATH
+    FILEPATH="$1"
+    SUBSTRING="$2"
+    sed "/$SUBSTRING/d" "$FILEPATH" > "$REPLACE_TMP_FILE"
+    cp "$REPLACE_TMP_FILE" "$FILEPATH"
 }
 
 prepare_expected_data_1()
 {
-    replace_lines $EXPECTED_TREE ".AVI" ".avi"
-    replace_lines $EXPECTED_TREE ".EXE" ".exe"
-    replace_lines $EXPECTED_TREE "áéíóúñ" "aeioun"
-    replace_lines $EXPECTED_TREE "with_sp " "with_sp_"
-    replace_lines $EXPECTED_TREE "testd ir" "testd_ir"
-    replace_lines $EXPECTED_TREE "test dir" "test_dir"
+    replace_lines "$EXPECTED_TREE" ".AVI" ".avi"
+    replace_lines "$EXPECTED_TREE" ".EXE" ".exe"
+    replace_lines "$EXPECTED_TREE" "áéíóúñ" "aeioun"
+    replace_lines "$EXPECTED_TREE" "with_sp " "with_sp_"
+    replace_lines "$EXPECTED_TREE" "testd ir" "testd_ir"
+    replace_lines "$EXPECTED_TREE" "test dir" "test_dir"
 }
 
 prepare_expected_data_2()
 {
-    rm_lines $EXPECTED_TREE ".EXE"
-    rm_lines $EXPECTED_TREE ".exe"
-    rm_lines $EXPECTED_TREE "testdir51"
+    rm_lines "$EXPECTED_TREE" ".EXE"
+    rm_lines "$EXPECTED_TREE" ".exe"
+    rm_lines "$EXPECTED_TREE" "testdir51"
 }
 
 prepare_expected_data_3()
 {
-    rm_lines $EXPECTED_TREE ".AVI"
-    rm_lines $EXPECTED_TREE ".avi"
-    rm_lines $EXPECTED_TREE "testdir52"
+    rm_lines "$EXPECTED_TREE" ".AVI"
+    rm_lines "$EXPECTED_TREE" ".avi"
+    rm_lines "$EXPECTED_TREE" "testdir52"
 }
 
 prepare_expected_data_4()
 {
-    replace_lines $EXPECTED_TREE "$TEST_DIR" "$OUTPUT_DIR"
-    rm_lines $EXPECTED_TREE ".txt"
-    rm_lines $EXPECTED_TREE ".exe"
-    rm_lines $EXPECTED_TREE ".ini"
-    rm_lines $EXPECTED_TREE ".EXE"
-    rm_lines $EXPECTED_TREE "no_ext"
-    rm_lines $EXPECTED_TREE ".xlextension"
-    rm_lines $EXPECTED_TREE ".XLEXTENSION"
-    rm_lines $EXPECTED_TREE "testdir51"
+    replace_lines "$EXPECTED_TREE" "$TEST_DIR" "$OUTPUT_DIR"
+    rm_lines "$EXPECTED_TREE" ".txt"
+    rm_lines "$EXPECTED_TREE" ".exe"
+    rm_lines "$EXPECTED_TREE" ".ini"
+    rm_lines "$EXPECTED_TREE" ".EXE"
+    rm_lines "$EXPECTED_TREE" "no_ext"
+    rm_lines "$EXPECTED_TREE" ".xlextension"
+    rm_lines "$EXPECTED_TREE" ".XLEXTENSION"
+    rm_lines "$EXPECTED_TREE" "testdir51"
 }
 
 # Replaces in the tree descripted in the specified file $1 all ocurrences of "└" with "├"
 # to make it easier the tests validations
 normalize_tree()
 {
-    TREE_FILE=$1
-    replace_lines $TREE_FILE "└" "├"
+    TREE_FILE="$1"
+    replace_lines "$TREE_FILE" "└" "├"
 }
 
 initialize_expected_tree()
 {
-    cp $ORIGINAL_TREE $EXPECTED_TREE
-    normalize_tree $EXPECTED_TREE
+    cp "$ORIGINAL_TREE" "$EXPECTED_TREE"
+    normalize_tree "$EXPECTED_TREE"
 }
 
 # Generates a tree file $2 from specified directory $1
 generate_tree()
 {
-    INPUT_DIR=$1
-    TREE_FILE=$2
-    tree $INPUT_DIR --dirsfirst --noreport > $TREE_FILE && normalize_tree $TREE_FILE
+    INPUT_DIR="$1"
+    TREE_FILE="$2"
+    tree "$INPUT_DIR" --dirsfirst --noreport > "$TREE_FILE" && normalize_tree "$TREE_FILE"
 }
 
 init_test()
 {
-    TEST_NUMBER=$1
-    echo "*** Running Test "$TEST_NUMBER": "
+    TEST_NUMBER="$1"
+    echo "*** Running Test ""$TEST_NUMBER"": "
 
-    rm -rf $TMP_DIR && mkdir -p $TMP_DIR
-    rm -rf $OUTPUT_DIR
-    rm -rf $TEST_DIR
+    rm -rf "$TMP_DIR" && mkdir -p "$TMP_DIR"
+    rm -rf "$OUTPUT_DIR"
+    rm -rf "$TEST_DIR"
 
-    $SCRIPT_DIR/prepare_test_dir.sh
+    "$SCRIPT_DIR"/prepare_test_dir.sh
 
-    tree $TEST_DIR --dirsfirst --noreport > $ORIGINAL_TREE   
+    tree "$TEST_DIR" --dirsfirst --noreport > "$ORIGINAL_TREE"   
 }
 
 print_ok()
@@ -104,9 +104,9 @@ exit_test()
 
 compare_output_vs_expected()
 {
-    DIR_TO_EVALUATE_PATH=$1
-    generate_tree $DIR_TO_EVALUATE_PATH $OUTPUT_TREE
-    diff $OUTPUT_TREE $EXPECTED_TREE >> /dev/null 2>&1 || exit_test
+    DIR_TO_EVALUATE_PATH="$1"
+    generate_tree "$DIR_TO_EVALUATE_PATH" "$OUTPUT_TREE"
+    diff "$OUTPUT_TREE" "$EXPECTED_TREE" >> /dev/null 2>&1 || exit_test
 }
 
 run_test_1()
@@ -116,9 +116,9 @@ run_test_1()
     initialize_expected_tree
     prepare_expected_data_1
 
-    $SCRIPT_DIR/dir_manager.sh -l -k -p ' ' _ $TEST_DIR
+    "$SCRIPT_DIR"/dir_manager.sh -l -k -p ' ' _ "$TEST_DIR"
 
-    compare_output_vs_expected $TEST_DIR
+    compare_output_vs_expected "$TEST_DIR"
     print_ok
 }
 
@@ -129,9 +129,9 @@ run_test_2()
     initialize_expected_tree
     prepare_expected_data_2
 
-    $SCRIPT_DIR/dir_manager.sh -r exe $TEST_DIR
+    "$SCRIPT_DIR"/dir_manager.sh -r exe "$TEST_DIR"
 
-    compare_output_vs_expected $TEST_DIR
+    compare_output_vs_expected "$TEST_DIR"
     print_ok
 }
 
@@ -142,13 +142,13 @@ run_test_3()
     initialize_expected_tree
     prepare_expected_data_3
 
-    $SCRIPT_DIR/dir_manager.sh -m avi $OUTPUT_DIR $TEST_DIR
+    "$SCRIPT_DIR"/dir_manager.sh -m avi "$OUTPUT_DIR" "$TEST_DIR"
 
-    compare_output_vs_expected $TEST_DIR
+    compare_output_vs_expected "$TEST_DIR"
 
     initialize_expected_tree
     prepare_expected_data_4
-    compare_output_vs_expected $OUTPUT_DIR
+    compare_output_vs_expected "$OUTPUT_DIR"
     print_ok
 }
 
@@ -161,32 +161,32 @@ run_test_4()
     prepare_expected_data_1
     prepare_expected_data_2
     prepare_expected_data_3
-    rm_lines $EXPECTED_TREE "testdir5"
+    rm_lines "$EXPECTED_TREE" "testdir5"
 
-    $SCRIPT_DIR/dir_manager.sh -l -k -p ' ' _ -r exe -m avi $OUTPUT_DIR $TEST_DIR
+    "$SCRIPT_DIR"/dir_manager.sh -l -k -p ' ' _ -r exe -m avi "$OUTPUT_DIR" "$TEST_DIR"
 
-    compare_output_vs_expected $TEST_DIR
+    compare_output_vs_expected "$TEST_DIR"
 
     initialize_expected_tree
     prepare_expected_data_4
     prepare_expected_data_1
-    compare_output_vs_expected $OUTPUT_DIR
+    compare_output_vs_expected "$OUTPUT_DIR"
     print_ok
 }
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-TEST_DIR=$SCRIPT_DIR/testdir
-OUTPUT_DIR=$SCRIPT_DIR/output
-TMP_DIR=/tmp/test_dir_manager
-ORIGINAL_TREE=$TMP_DIR/original_tree.txt
-EXPECTED_TREE=$TMP_DIR/expected_tree.txt
-OUTPUT_TREE=$TMP_DIR/output_tree.txt
-REPLACE_TMP_FILE=$TMP_DIR/replace_tmp_file.txt
+TEST_DIR="$SCRIPT_DIR""/testdir"
+OUTPUT_DIR="$SCRIPT_DIR""/output"
+TMP_DIR="/tmp/test_dir_manager"
+ORIGINAL_TREE="$TMP_DIR""/original_tree.txt"
+EXPECTED_TREE="$TMP_DIR""/expected_tree.txt"
+OUTPUT_TREE="$TMP_DIR""/output_tree.txt"
+REPLACE_TMP_FILE="$TMP_DIR""/replace_tmp_file.txt"
 
 run_test_1  # 0 files removed, 1160 files moved, 21 directories removed
 run_test_2	# 202 files removed, 0 files moved, 1 directories removed
 run_test_3  # 0 files removed, 202 files moved, 1 directories removed
 run_test_4  # 202 files removed, 970 files moved, 25 directories removed
 
-rm -rf $OUTPUT_DIR
-rm -rf $TEST_DIR
+rm -rf "$OUTPUT_DIR"
+rm -rf "$TEST_DIR"
