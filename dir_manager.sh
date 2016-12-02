@@ -5,7 +5,7 @@ print_help()
   echo "Usage: ./dir_manager.sh [OPTIONS] <DIR_TO_PROCESS>"
   echo -e "  -l, --lowercase\t\t\t\tConverts all the extensions (not dir nor file names) to lowercase in files below DIR_TO_PROCESS"
   echo -e "  -k, --keepenglish\t\t\t\tKeep only english characters characters in paths below DIR_TO_PROCESS"
-  echo -e "  -s, --spaces <term>\t\t\t\tReplaces with <term> all the spaces in paths below DIR_TO_PROCESS"
+  echo -e "  -p, --replace <old> <new>\t\t\tReplaces occurrences of <old> with <new> in paths below DIR_TO_PROCESS"
   echo -e "  -r, --remextension <type>\t\t\tRemoves all the files of type <type> below DIR_TO_PROCESS"
   echo -e "  -m, --mvoutput <type> <output_dir>\t\tMoves to <output_dir> all files of type <type>, below DIR_TO_PROCESS, preserving the structure of subdirectories"
   echo -e "  -v, --verbose\t\t\t\t\tVerbose output"
@@ -18,11 +18,12 @@ to_lower()
   echo $1 | awk '{print tolower($0)}'
 }
 
-replace_spaces()
+replace_strings()
 {
   STRING=$1
-  INS_SRT=$2
-  echo ${STRING// /$INS_SRT}
+  OLD_STR=$2
+  NEW_STR=$3
+  echo ${STRING//$OLD_STR/$NEW_STR}
 }
 
 keep_english_chars()
@@ -89,8 +90,8 @@ process_single_file()
     NEW_PATH=$(keep_english_chars "$NEW_PATH")
   fi
 
-  if [ -n "$REPL_SPACES" ] ; then
-    NEW_PATH=$(replace_spaces "$NEW_PATH" "$REPL_SPACES")
+  if [ -n "$REPL_OLD" ] ; then
+    NEW_PATH=$(replace_strings "$NEW_PATH" "$REPL_OLD" "$REPL_NEW")
   fi
 
   if [ "$EXTENSION" == "$MV_EXTENSION" ] && [ -n "$MV_OUTPUT" ] ; then
@@ -121,7 +122,8 @@ recursive_rm_dir()
 
 TO_LOWERCASE=false
 KEEP_ENGLISH_CHARS=false
-REPL_SPACES=""
+REPL_OLD=""
+REPL_NEW=""
 RM_EXTENSION=""
 MV_EXTENSION=""
 MV_OUTPUT=""
@@ -143,9 +145,11 @@ do
       TO_LOWERCASE=true
       ;;
 
-      -s|--spaces)
-      REPL_SPACES="$2"
-      shift 				# past argument
+      -p|--replace)
+      REPL_OLD="$2"
+      REPL_NEW="$3"
+      shift 				# past argument 1
+      shift 				# past argument 2
       ;;
 
       -r|--remextension)
