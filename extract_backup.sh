@@ -22,7 +22,7 @@ process_single_file()
 	rm "$TARPATH" || exit 1 
 	
 	~/Bash-Scripts/dir_analyzer.sh "$OUTPUTDIR" > "$DIR_ANALYSIS_TXT"
-	tree "$OUTPUTDIR" > "$TREE_TXT"
+	tree -a "$OUTPUTDIR" > "$TREE_TXT"
 	
 	cp -r /tmp/dir_analysis/ "$DIR_ANALYSIS_OUTDIR"
 	
