@@ -2,58 +2,62 @@
 
 print_help()
 {
-  echo "Usage: ./make_backup.sh <DIR_TO_PACKAGE> <PASSWORD> <BACKUP_INFO_DIR>"
+  echo "Usage: ./make_backup.sh <DIR_TO_PACKAGE_PATH> <PASSWORD> <BACKUP_INFO_DIR_PATH>"
+  echo "   where <DIR_TO_PACKAGE_PATH> and <BACKUP_INFO_DIR_PATH> can be absolute or relative to the current directory."
 }
 
-is_relative_path()
+make_dir_path_absolute()
 {
-    INPUT_PATH="$1"
-    if [[ "$INPUT_PATH" = /* ]]; then
-        return 1    # false = 1
-    else
-        return 0    # true = 0
-    fi
+    INPUT_PATH="$1"    
+	echo "$( cd "$INPUT_PATH" && pwd )"
 }
+
 
 if [ "$#" -ne 3 ] ; then
     print_help
     exit 1
 fi
 
-DIRPATH="$1"
-BACKUP_INFO_DIR="$3"
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+DIR_TO_PACKAGE_PATH="$1"
+BACKUP_INFO_DIR_PATH="$3"
+CURRENT_DIR_PATH=${PWD}
 
-# Check if DIRPATH is a valid directory
-cd "$DIRPATH" || { echo 'ERROR: '"$DIRPATH"' is not a directory'; exit 1; }
-cd --                                   # Go back to the original directory
-# Make DIRPATH an absolute path
-if is_relative_path "$DIRPATH" ; then
-    CURRENT_DIR=${PWD}
-    DIRPATH="$CURRENT_DIR"/"$DIRPATH"
-fi
+# Check if DIR_TO_PACKAGE_PATH is a valid directory
+cd "$DIR_TO_PACKAGE_PATH" || { echo 'ERROR: '"$DIR_TO_PACKAGE_PATH"' is not a directory'; exit 1; }
+cd "$CURRENT_DIR_PATH"
 
 # Check if BACKUP_INFO_DIR is a valid directory
-cd "$BACKUP_INFO_DIR" || { echo 'ERROR: '"$BACKUP_INFO_DIR"' is not a directory'; exit 1; }
-cd --                                   # Go back to the original directory
-# Make BACKUP_INFO_DIR an absolute path
-if is_relative_path "$BACKUP_INFO_DIR" ; then
-    CURRENT_DIR=${PWD}
-    BACKUP_INFO_DIR="$CURRENT_DIR"/"$BACKUP_INFO_DIR"
-fi
+cd "$BACKUP_INFO_DIR_PATH" || { echo 'ERROR: '"$BACKUP_INFO_DIR_PATH"' is not a directory'; exit 1; }
+cd "$CURRENT_DIR_PATH"
 
-BACKUP_INFO_DIR=${BACKUP_INFO_DIR%/}    # Remove trailing slashes if exists
-DIRPATH=${DIRPATH%/}                    # Remove trailing slashes if exists
-DIRNAME="${DIRPATH##*/}"
-ZIPFILE_NAME="$DIRNAME".zip
 
-"$SCRIPT_DIR"/dir_analyzer.sh "$DIRPATH" > "$BACKUP_INFO_DIR"/"$DIRNAME"_analysis.txt
-cp -r /tmp/dir_analysis/ "$BACKUP_INFO_DIR"/"$DIRNAME"_analysis/
+DIR_TO_PACKAGE_PATH=$(make_dir_path_absolute "$DIR_TO_PACKAGE_PATH")
+DIR_TO_PACKAGE_PATH=${DIR_TO_PACKAGE_PATH%/}		# Remove trailing slashes if exists
+DIR_TO_PACKAGE_NAME=${DIR_TO_PACKAGE_PATH##*/}
 
-tree -a "$DIRPATH" > "$BACKUP_INFO_DIR"/"$DIRNAME"_tree.txt
 
-TARNAME="$DIRNAME".tar
+# Extract info about files in the directory to package
+BACKUP_INFO_DIR_PATH=$(make_dir_path_absolute "$BACKUP_INFO_DIR_PATH")
+BACKUP_INFO_DIR_PATH=${BACKUP_INFO_DIR_PATH%/}    	# Remove trailing slashes if exists
+SCRIPT_DIR_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+"$SCRIPT_DIR_PATH"/dir_analyzer.sh "$DIR_TO_PACKAGE_PATH" > "$BACKUP_INFO_DIR_PATH"/"$DIR_TO_PACKAGE_NAME"_analysis.txt
+cp -r /tmp/dir_analysis/ "$BACKUP_INFO_DIR_PATH"/"$DIR_TO_PACKAGE_NAME"_analysis/
+tree -a "$DIR_TO_PACKAGE_PATH" > "$BACKUP_INFO_DIR_PATH"/"$DIR_TO_PACKAGE_NAME"_tree.txt
 
-tar -czvf "$TARNAME" "$DIRPATH"/* && zip -r "$ZIPFILE_NAME" --password "$2" "$TARNAME"
-mv "$ZIPFILE_NAME" "$DIRPATH"/"$ZIPFILE_NAME"
-rm "$TARNAME"
+# The tar and zip files are built in a neutral directory because, otherwise, the generation will fail 
+# when the current directory is the same than the directory to package
+TMP_DIR_PATH=/tmp	
+TARFILE_NAME="$DIR_TO_PACKAGE_NAME".tar
+TARFILE_PATH="$TMP_DIR_PATH"/"$TARFILE_NAME"
+ZIPFILE_NAME="$DIR_TO_PACKAGE_NAME".zip
+ZIPFILE_PATH="$TMP_DIR_PATH"/"$ZIPFILE_NAME"
+
+# We move one directory above the directory to package, in order to run the tar command well
+cd "$DIR_TO_PACKAGE_PATH"  || { echo 'ERROR: '"$DIR_TO_PACKAGE_PATH"' is invalid at the end of the script'; exit 1; }
+cd ..	
+
+# After running tar we move to the directory where the tar was created, in order to run the zip command well
+tar -czvf "$TARFILE_PATH" "$DIR_TO_PACKAGE_NAME" && cd "$TMP_DIR_PATH" && zip -r "$ZIPFILE_NAME" --password "$2" "$TARFILE_NAME"
+rm "$TARFILE_PATH"
+mv "$ZIPFILE_PATH" "$CURRENT_DIR_PATH"
+

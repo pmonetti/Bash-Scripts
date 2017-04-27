@@ -12,13 +12,13 @@ process_single_file()
 	BASENAME="${FILENAME%.zip}"
 	OUTPUTDIR="$BASENAME"
 	TARPATH="$BASENAME".tar
-	DIR_ANALYSIS_TXT="$ANALYSIS_DIR""$BASENAME"_analysis.txt
-	DIR_ANALYSIS_OUTDIR="$ANALYSIS_DIR""$BASENAME"_analysis/
-	TREE_TXT="$ANALYSIS_DIR""$BASENAME"_tree.txt	
+	DIR_ANALYSIS_TXT="$ANALYSIS_DIR"/"$BASENAME"_analysis.txt
+	DIR_ANALYSIS_OUTDIR="$ANALYSIS_DIR"/"$BASENAME"_analysis/
+	TREE_TXT="$ANALYSIS_DIR"/"$BASENAME"_tree.txt	
 
 	unzip -P "$2" "$ZIPPATH" -d . || exit 1
 	mkdir -p "$OUTPUTDIR" || exit 1
-	tar -xvzf "$TARPATH" -C "$OUTPUTDIR" || exit 1
+	tar -xvzf "$TARPATH" || exit 1
 	rm "$TARPATH" || exit 1 
 	
 	~/Bash-Scripts/dir_analyzer.sh "$OUTPUTDIR" > "$DIR_ANALYSIS_TXT"
@@ -36,15 +36,23 @@ if [ "$#" -ne 2 ] ; then
     exit 1
 fi
 
-DIRPATH=$1
-ANALYSIS_DIR="analysis/"
-MD5SUM_TXT="$ANALYSIS_DIR"md5sum_all.txt
+CURRENT_DIR_PATH=${PWD}
+DIR_WITH_PACKAGES_PATH=$1
+PASS=$2
 
-cd $DIRPATH
+# Check if DIR_WITH_PACKAGES_PATH is a valid directory
+cd "$DIR_WITH_PACKAGES_PATH" || { echo 'ERROR: '"$DIR_WITH_PACKAGES_PATH"' is not a directory'; exit 1; }
+cd "$CURRENT_DIR_PATH"
+
+
+ANALYSIS_DIR="analysis"
+MD5SUMS_FILE_PATH="$ANALYSIS_DIR"/md5sum_all.txt
+
+cd "$DIR_WITH_PACKAGES_PATH"
 
 mkdir -p "$ANALYSIS_DIR"
-md5sum *.zip > "$MD5SUM_TXT"
+md5sum *.zip > "$MD5SUMS_FILE_PATH"
 
 while read FILEPATH; do
-  process_single_file "$FILEPATH" "$2"
+  process_single_file "$FILEPATH" "$PASS"
 done < <(find "$(pwd)" -type f | grep zip)
