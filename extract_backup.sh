@@ -18,7 +18,7 @@ process_single_file()
 
 	unzip -P "$2" "$ZIPPATH" -d . || exit 1
 	mkdir -p "$OUTPUTDIR" || exit 1
-	tar -xvzf "$TARPATH" || exit 1
+	tar -xvzf "$TARPATH" -C "$BASENAME"|| exit 1
 	rm "$TARPATH" || exit 1 
 	
 	~/Bash-Scripts/dir_analyzer.sh "$OUTPUTDIR" > "$DIR_ANALYSIS_TXT"
