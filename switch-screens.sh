@@ -56,10 +56,5 @@ fi
 # Toggle audio output between HDMI and Analog Stereo
 ##############################################################################################################
 
-CURRENT_PROFILE=$(pacmd list-cards | grep "active profile" | cut -d ' ' -f 3-)
-
-if [ "$CURRENT_PROFILE" = "<output:hdmi-stereo+input:analog-stereo>" ] ; then
-        pacmd set-card-profile 0 "output:analog-stereo+input:analog-stereo" >> /dev/null
-else
-        pacmd set-card-profile 0 "output:hdmi-stereo+input:analog-stereo" >> /dev/null
-fi
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+$SCRIPT_DIR/toggle_audio.sh
