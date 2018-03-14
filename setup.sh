@@ -6,7 +6,7 @@ echo deb http://repository.spotify.com stable non-free | sudo tee /etc/apt/sourc
 
 # Install packages
 sudo apt-get update
-sudo apt-get install -y yakuake htop
+sudo apt-get install -y yakuake htop tree
 sudo apt-get install -y synaptic dconf-tools gksu gdebi inxi leafpad catfish pavucontrol 
 sudo apt-get install -y xubuntu-restricted-extras libdvd-pkg
 sudo apt-get install -y git geany openvpn
