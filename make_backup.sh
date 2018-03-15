@@ -31,6 +31,8 @@ cd "$BACKUP_INFO_DIR_PATH" || { echo 'ERROR: '"$BACKUP_INFO_DIR_PATH"' is not a 
 cd "$CURRENT_DIR_PATH"
 
 
+sudo apt-get install tree
+
 DIR_TO_PACKAGE_PATH=$(make_dir_path_absolute "$DIR_TO_PACKAGE_PATH")
 DIR_TO_PACKAGE_PATH=${DIR_TO_PACKAGE_PATH%/}		# Remove trailing slashes if exists
 DIR_TO_PACKAGE_NAME=${DIR_TO_PACKAGE_PATH##*/}

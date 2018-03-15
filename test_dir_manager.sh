@@ -183,6 +183,8 @@ EXPECTED_TREE="$TMP_DIR""/expected_tree.txt"
 OUTPUT_TREE="$TMP_DIR""/output_tree.txt"
 REPLACE_TMP_FILE="$TMP_DIR""/replace_tmp_file.txt"
 
+sudo apt-get install tree
+
 run_test_1  # 0 files removed, 1160 files moved, 21 directories removed
 run_test_2	# 202 files removed, 0 files moved, 1 directories removed
 run_test_3  # 0 files removed, 202 files moved, 1 directories removed

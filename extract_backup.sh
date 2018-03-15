@@ -36,6 +36,8 @@ if [ "$#" -ne 2 ] ; then
     exit 1
 fi
 
+sudo apt-get install tree
+
 CURRENT_DIR_PATH=${PWD}
 DIR_WITH_PACKAGES_PATH=$1
 PASS=$2
