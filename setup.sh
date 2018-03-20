@@ -20,6 +20,9 @@ sudo apt-get install -f -y
 git clone https://github.com/pmonetti/Bash-Scripts.git
 ~/Bash-Scripts/update_linux.sh
 
+# Load XFCE panel
+~/Bash-Scripts/load_xfce_panel.sh
+
 # Add yakuake to startup
 mkdir -p ~/.config/autostart/
 cat << EOF >> ~/.config/autostart/yakuake.desktop
@@ -29,3 +32,5 @@ Exec=/usr/bin/yakuake
 Name=yakuake
 Comment=yakuake 
 EOF
+
+
