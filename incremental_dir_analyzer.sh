@@ -1,5 +1,10 @@
 #/bin/bash
 
+# utils.sh script is required
+# to use the bytes_to_readable_format function
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source $SCRIPT_DIR/utils.sh
+
 print_help()
 {
   echo "Usage: ./incremental_dir_analizer.sh <DIR_TO_ANALYZE> [-c]"
@@ -117,9 +122,6 @@ WITHOUT_EXTENSION_COUNTER=0
 WITHOUT_EXTENSION_ACCUM_SIZE=0
 TOTAL_FILES=0
 TOTAL_SIZE=0
-
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-source $SCRIPT_DIR/utils.sh
 
 # Prepare and clean the output directory; then change the current directory to the one that will be analyzed
 rm -rf $OUTPUT_DIR

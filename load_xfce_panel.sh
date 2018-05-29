@@ -1,4 +1,10 @@
-#!/bin/sh
+#/bin/bash
+
+# utils.sh script is required
+# to use the get_linux_version_id function
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source $SCRIPT_DIR/utils.sh
+
 TMP_PANEL_NAME='temppanel'
 TMP_PANEL_DIR=$TMP_PANEL_NAME
 TMP_LAUNCHER_DIR=$TMP_PANEL_DIR'/launcher-9'
@@ -73,8 +79,18 @@ Categories=AudioVideo;Audio;Mixer;GTK;
 X-XFCE-Source=file:///usr/share/applications/pavucontrol.desktop
 EOF
 
-cd $TMP_PANEL_DIR && tar -zcvf ../$TAR_FILE * > /dev/null && cd -- 
-xfpanel-switch load $TAR_FILE 
+cd $TMP_PANEL_DIR && tar -zcvf ../$TAR_FILE * > /dev/null && cd --
+
+LINUX_VERSION_ID=$(get_linux_version_id)
+
+if [ "$LINUX_VERSION_ID" = "16.04" ] ; then
+	python3 /usr/share/xfpanel-switch/xfpanel-switch/panelconfig.py load $TAR_FILE
+elif [ "$LINUX_VERSION_ID" = "18.04" ] ; then
+	xfpanel-switch load $TAR_FILE
+else
+	echo "Unsupported linux version:" $LINUX_VERSION_ID 
+fi
+
 rm -rf $TMP_PANEL_DIR
 rm -rf $TAR_FILE
 

@@ -47,6 +47,16 @@ bytes_to_readable_format()
   echo "$SIZE_IN_BYTES" "$WITH_COLOR" | awk "$AWK_SCRIPT"
 }
 
+get_linux_version_id()
+{
+	if [ -f /etc/os-release ]; then
+		. /etc/os-release
+		echo $VERSION_ID
+	else
+		echo "Linux Version Id Not Found"
+	fi	
+}
+
 print_and_exec()
 {
 	CMD="$1"
