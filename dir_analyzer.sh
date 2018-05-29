@@ -117,7 +117,7 @@ TOTAL_FILES=0
 TOTAL_SIZE=0
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-source $SCRIPT_DIR/format_size.sh
+source $SCRIPT_DIR/utils.sh
 
 declare -A SIZES
 declare -A COUNTERS
