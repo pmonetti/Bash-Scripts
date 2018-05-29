@@ -1,6 +1,7 @@
 #/bin/bash
 
-# utils.sh script is required !
+# The utils.sh script is required to use the following functions:
+# bytes_to_readable_format, get_size
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source $SCRIPT_DIR/utils.sh
 
@@ -158,4 +159,5 @@ echo
 
 cd - > /dev/null
 
-# (1) This complex line is needed to avoid having problems with filenames that contains spaces
+# (1) This complex line is needed to avoid having problems with
+# filenames that contains spaces

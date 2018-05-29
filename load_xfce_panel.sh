@@ -1,7 +1,7 @@
 #/bin/bash
 
-# utils.sh script is required
-# to use the get_linux_version_id function
+# The utils.sh script is required to use the following functions:
+# get_linux_version_id
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source $SCRIPT_DIR/utils.sh
 

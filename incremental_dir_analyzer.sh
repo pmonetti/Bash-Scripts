@@ -1,7 +1,7 @@
 #/bin/bash
 
-# utils.sh script is required
-# to use the bytes_to_readable_format function
+# The utils.sh script is required to use the following functions: 
+# bytes_to_readable_format, get_size
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source $SCRIPT_DIR/utils.sh
 
@@ -26,12 +26,6 @@ process_file()
     FILE_SIZE=$(get_size "\${FILEPATH}")	# (1)
     let WITHOUT_EXTENSION_ACCUM_SIZE=$WITHOUT_EXTENSION_ACCUM_SIZE+$FILE_SIZE
   fi
-}
-
-get_size()
-{
-  eval FILEPATH="$1"		# (1)
-  echo $(stat --printf="%s" "$FILEPATH")
 }
 
 process_extensions()
@@ -185,4 +179,5 @@ echo
 cd - > /dev/null
 
 
-# (1) This complex line is needed to avoid having problems with filenames that contains spaces
+# (1) This complex line is needed to avoid having problems with
+# filenames that contains spaces

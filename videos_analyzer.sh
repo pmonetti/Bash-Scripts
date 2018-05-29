@@ -15,7 +15,6 @@ ms_to_hh_mm_ss()
  printf "%02d:%02d:%02d\n" "$HOURS" "$MINUTES" "$SECONDS"
 }
 
-
 bytes_to_kbytes()
 {
 	SIZE_IN_B=$1

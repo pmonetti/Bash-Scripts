@@ -1,5 +1,11 @@
 #/bin/bash
 
+# The utils.sh script is required to use the following functions:
+# invalid_dir_path, is_relative_path, keep_english_chars,
+# replace_strings, to_lower
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source $SCRIPT_DIR/utils.sh
+
 print_help()
 {
   echo "Usage: ./dir_manager.sh [OPTIONS] <DIR_TO_PROCESS>"
@@ -11,46 +17,6 @@ print_help()
   echo -e "  -v, --verbose\t\t\t\t\tVerbose output"
 
   echo -e "Note: All <type> parameters are case insensitive"
-}
-
-to_lower()
-{
-  echo "$1" | awk '{print tolower($0)}'
-}
-
-replace_strings()
-{
-  STRING="$1"
-  OLD_STR="$2"
-  NEW_STR="$3"
-  echo ${STRING//$OLD_STR/$NEW_STR}
-}
-
-keep_english_chars()
-{
-  STRING="$1"
-  ENGLISH_STR=$(echo "$STRING" | iconv -f utf8 -t ascii//TRANSLIT)
-  echo "$ENGLISH_STR"
-}
-
-is_relative_path()
-{
-    INPUT_PATH="$1"
-    if [[ "$INPUT_PATH" = /* ]]; then
-        return 1    # false = 1
-    else
-        return 0    # true = 0
-    fi
-}
-
-invalid_dir_path()
-{
-    INPUT_PATH="$1"
-    if [ -d "$INPUT_PATH" ] ; then
-        return 1    # false = 1
-    else
-        return 0    # true = 0
-    fi
 }
 
 process_single_file()

@@ -1,7 +1,7 @@
 #/bin/bash
 
-# utils.sh script is required
-# to use the print_and_exec function
+# The utils.sh script is required to use the following functions:
+# print_and_exec
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source $SCRIPT_DIR/utils.sh
 

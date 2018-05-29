@@ -57,6 +57,45 @@ get_linux_version_id()
 	fi	
 }
 
+get_size()
+{
+  eval FILEPATH="$1"		# (1)
+  echo $(stat --printf="%s" "$FILEPATH")
+}
+
+invalid_dir_path()
+{
+    INPUT_PATH="$1"
+    if [ -d "$INPUT_PATH" ] ; then
+        return 1    # false = 1
+    else
+        return 0    # true = 0
+    fi
+}
+
+is_relative_path()
+{
+    INPUT_PATH="$1"
+    if [[ "$INPUT_PATH" = /* ]]; then
+        return 1    # false = 1
+    else
+        return 0    # true = 0
+    fi
+}
+
+keep_english_chars()
+{
+  STRING="$1"
+  ENGLISH_STR=$(echo "$STRING" | iconv -f utf8 -t ascii//TRANSLIT)
+  echo "$ENGLISH_STR"
+}
+
+make_dir_path_absolute()
+{
+    INPUT_PATH="$1"    
+	echo "$( cd "$INPUT_PATH" && pwd )"
+}
+
 print_and_exec()
 {
 	CMD="$1"
@@ -66,3 +105,19 @@ print_and_exec()
 	eval $CMD
 	echo
 }
+
+replace_strings()
+{
+  STRING="$1"
+  OLD_STR="$2"
+  NEW_STR="$3"
+  echo ${STRING//$OLD_STR/$NEW_STR}
+}
+
+to_lower()
+{
+  echo "$1" | awk '{print tolower($0)}'
+}
+
+# (1) This complex line is needed to avoid having problems with
+# filenames that contains spaces

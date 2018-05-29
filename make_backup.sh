@@ -1,17 +1,15 @@
 #/bin/bash
 
+# The utils.sh script is required to use the following functions:
+# make_dir_path_absolute
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source $SCRIPT_DIR/utils.sh
+
 print_help()
 {
   echo "Usage: ./make_backup.sh <DIR_TO_PACKAGE_PATH> <PASSWORD> <BACKUP_INFO_DIR_PATH>"
   echo "   where <DIR_TO_PACKAGE_PATH> and <BACKUP_INFO_DIR_PATH> can be absolute or relative to the current directory."
 }
-
-make_dir_path_absolute()
-{
-    INPUT_PATH="$1"    
-	echo "$( cd "$INPUT_PATH" && pwd )"
-}
-
 
 if [ "$#" -ne 3 ] ; then
     print_help
