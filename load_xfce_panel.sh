@@ -74,8 +74,7 @@ X-XFCE-Source=file:///usr/share/applications/pavucontrol.desktop
 EOF
 
 cd $TMP_PANEL_DIR && tar -zcvf ../$TAR_FILE * > /dev/null && cd -- 
-
-python3 /usr/share/xfpanel-switch/xfpanel-switch/panelconfig.py load $TAR_FILE 
+xfpanel-switch load $TAR_FILE 
 rm -rf $TMP_PANEL_DIR
 rm -rf $TAR_FILE
 
