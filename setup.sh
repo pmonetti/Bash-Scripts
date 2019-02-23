@@ -7,7 +7,7 @@ ls $GOOGLE_INSTALLER_PATH || exit
 
 # Install packages
 sudo apt-get update
-sudo apt-get install -y yakuake htop tree \
+sudo apt-get install -y vlc yakuake htop tree \
 						git geany openvpn gparted
 
 sudo dpkg -i $GOOGLE_INSTALLER_PATH || exit 1
