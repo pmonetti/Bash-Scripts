@@ -20,11 +20,11 @@ DIR_TO_PACKAGE_PATH="$1"
 BACKUP_INFO_DIR_PATH="$3"
 CURRENT_DIR_PATH=${PWD}
 
-# Check if DIR_TO_PACKAGE_PATH is a valid directory
+# Check if DIR_TO_PACKAGE_PATH is a valid directory and go back to the original directory
 cd "$DIR_TO_PACKAGE_PATH" || { echo 'ERROR: '"$DIR_TO_PACKAGE_PATH"' is not a directory'; exit 1; }
 cd "$CURRENT_DIR_PATH"
 
-# Check if BACKUP_INFO_DIR is a valid directory
+# Check if BACKUP_INFO_DIR is a valid directory and go back to the original directory
 cd "$BACKUP_INFO_DIR_PATH" || { echo 'ERROR: '"$BACKUP_INFO_DIR_PATH"' is not a directory'; exit 1; }
 cd "$CURRENT_DIR_PATH"
 
@@ -40,9 +40,11 @@ DIR_TO_PACKAGE_NAME=${DIR_TO_PACKAGE_PATH##*/}
 BACKUP_INFO_DIR_PATH=$(make_dir_path_absolute "$BACKUP_INFO_DIR_PATH")
 BACKUP_INFO_DIR_PATH=${BACKUP_INFO_DIR_PATH%/}    	# Remove trailing slashes if exists
 SCRIPT_DIR_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-"$SCRIPT_DIR_PATH"/dir_analyzer.sh "$DIR_TO_PACKAGE_PATH" > "$BACKUP_INFO_DIR_PATH"/"$DIR_TO_PACKAGE_NAME"_analysis.txt
-cp -r /tmp/dir_analysis/ "$BACKUP_INFO_DIR_PATH"/"$DIR_TO_PACKAGE_NAME"_analysis/
-tree -a "$DIR_TO_PACKAGE_PATH" > "$BACKUP_INFO_DIR_PATH"/"$DIR_TO_PACKAGE_NAME"_tree.txt
+BACKUP_INFO_PACKAGE_DIR_PATH="$BACKUP_INFO_DIR_PATH"/"$DIR_TO_PACKAGE_NAME"_analysis/
+mkdir "$BACKUP_INFO_PACKAGE_DIR_PATH"
+"$SCRIPT_DIR_PATH"/dir_analyzer.sh "$DIR_TO_PACKAGE_PATH" > "$BACKUP_INFO_PACKAGE_DIR_PATH"/"$DIR_TO_PACKAGE_NAME"_analysis.txt
+cp -r /tmp/dir_analysis/* "$BACKUP_INFO_PACKAGE_DIR_PATH"
+tree -a "$DIR_TO_PACKAGE_PATH" > "$BACKUP_INFO_PACKAGE_DIR_PATH"/"$DIR_TO_PACKAGE_NAME"_tree.txt
 
 # The tar and zip files are built in a neutral directory because, otherwise, the generation will fail 
 # when the current directory is the same than the directory to package
