@@ -21,5 +21,5 @@ cd "$DIR_WITH_DIRS_TO_BACKUP" || { echo 'ERROR: '"$DIR_WITH_DIRS_TO_BACKUP"' is 
 cd "$CURRENT_DIR_PATH"
 
 while read SUBDIRPATH; do
-  $SCRIPT_DIR/make_backup.sh "$SUBDIRPATH" $2 $3
+  $SCRIPT_DIR/make_backup.sh "$SUBDIRPATH" "$2" "$3"
 done < <(find "$DIR_WITH_DIRS_TO_BACKUP" -mindepth 1 -maxdepth 1 -type d)
