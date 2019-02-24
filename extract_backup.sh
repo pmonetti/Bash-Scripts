@@ -14,20 +14,20 @@ process_single_file()
 	OUTPUTDIR="$BASENAME"
 
 	TARPATH="$BASENAME".tar
-	DIR_ANALYSIS_OUTDIR="$ANALYSIS_DIR"/"$BASENAME"_analysis/
-	DIR_ANALYSIS_TXT="$DIR_ANALYSIS_OUTDIR"/"$BASENAME"_analysis.txt	
-	TREE_TXT="$DIR_ANALYSIS_OUTDIR"/"$BASENAME"_tree.txt
+	DIR_SINGLE_PACKAGE_ANALYSIS="$DIR_ANALYSIS_PARENT"/"$BASENAME"_analysis/
+	DIR_ANALYSIS_TXT="$DIR_SINGLE_PACKAGE_ANALYSIS"/"$BASENAME"_analysis.txt	
+	TREE_TXT="$DIR_SINGLE_PACKAGE_ANALYSIS"/"$BASENAME"_tree.txt
 
 	unzip -P "$2" "$ZIPPATH" -d . || exit 1
 	mkdir -p "$OUTPUTDIR" || exit 1
 	tar -xvzf "$TARPATH" || exit 1
 	rm "$TARPATH" || exit 1 
 
-	mkdir "$DIR_ANALYSIS_OUTDIR"
+	mkdir "$DIR_SINGLE_PACKAGE_ANALYSIS"
 	~/Bash-Scripts/dir_analyzer.sh "$OUTPUTDIR" > "$DIR_ANALYSIS_TXT"
 	tree -a "$OUTPUTDIR" > "$TREE_TXT"
 	
-	cp -r /tmp/dir_analysis/* "$DIR_ANALYSIS_OUTDIR"
+	cp -r /tmp/dir_analysis/* "$DIR_SINGLE_PACKAGE_ANALYSIS"
 }
 
 
@@ -46,12 +46,12 @@ cd "$CURRENT_DIR_PATH"
 
 sudo apt-get install tree
 
-ANALYSIS_DIR="analysis"
-MD5SUMS_FILE_PATH="$ANALYSIS_DIR"/md5sum_all.txt
+DIR_ANALYSIS_PARENT="analysis"
+MD5SUMS_FILE_PATH="$DIR_ANALYSIS_PARENT"/md5sum_all.txt
 
 cd "$DIR_WITH_PACKAGES_PATH"
 
-mkdir -p "$ANALYSIS_DIR"
+mkdir -p "$DIR_ANALYSIS_PARENT"
 md5sum *.zip > "$MD5SUMS_FILE_PATH"
 
 while read FILEPATH; do
