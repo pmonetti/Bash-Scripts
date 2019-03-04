@@ -1,4 +1,4 @@
-#/bin/bash
+#! /bin/bash
 
 # The utils.sh script is required to use the following functions:
 # bytes_to_readable_format, get_size
@@ -125,8 +125,8 @@ declare -A SIZES
 declare -A COUNTERS
 
 # Prepare and clean the output directory; then change the current directory to the one that will be analyzed
-rm -rf $OUTPUT_DIR
-mkdir -p $OUTPUT_DIR
+rm -rf $OUTPUT_DIR || exit 1
+mkdir -p $OUTPUT_DIR  || exit 1
 cd "$DIR_TO_ANALYZE" >> /dev/null 2>&1 || { echo 'Invalid directory'; exit 1; }
 
 # Extract all the files extensions of the files contained below the current directory and write them to $EXTENSIONS_PATH, ordered and without duplicates

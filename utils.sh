@@ -1,4 +1,4 @@
-#/bin/bash
+#! /bin/bash
 
 bytes_to_readable_format()
 {
@@ -96,13 +96,19 @@ make_dir_path_absolute()
 	echo "$( cd "$INPUT_PATH" && pwd )"
 }
 
+print_in_green()
+{
+	CMD="$1"
+	GREEN='\033[0;32m'
+	NO_COLOR='\033[0m'	
+	printf "${GREEN}${CMD}${NO_COLOR}\n"	
+}
+
 print_and_exec()
 {
 	CMD="$1"
-	RED='\033[0;31m'
-	NO_COLOR='\033[0m'	
-	printf "${RED}${CMD}${NO_COLOR}\n"
-	eval $CMD
+	print_in_green "$CMD"
+	eval "$CMD"
 	echo
 }
 
@@ -118,6 +124,3 @@ to_lower()
 {
   echo "$1" | awk '{print tolower($0)}'
 }
-
-# (1) This complex line is needed to avoid having problems with
-# filenames that contains spaces
