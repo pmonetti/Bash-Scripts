@@ -1,4 +1,4 @@
-#/bin/bash
+#! /bin/bash
 
 # The utils.sh script is required to use the following functions:
 # get_linux_version_id

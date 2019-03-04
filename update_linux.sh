@@ -1,4 +1,4 @@
-#/bin/bash
+#! /bin/bash
 
 sudo apt-get -y update || exit 1
 sudo apt-get -y upgrade || exit 1

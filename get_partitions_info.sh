@@ -1,4 +1,4 @@
-#/bin/bash
+#! /bin/bash
 
 # The utils.sh script is required to use the following functions:
 # print_and_exec

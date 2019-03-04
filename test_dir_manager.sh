@@ -1,4 +1,4 @@
-#/bin/bash
+#! /bin/bash
 
 # Replaces in all the lines, from the specified file $1, $2 with $3
 replace_lines()

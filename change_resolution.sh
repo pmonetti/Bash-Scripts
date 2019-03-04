@@ -1,4 +1,4 @@
-#/bin/bash
+#! /bin/bash
 
 MONITOR_ID="eDP-1"
 FHD="1920x1080"

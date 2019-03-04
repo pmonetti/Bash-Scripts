@@ -1,4 +1,4 @@
-#/bin/bash
+#! /bin/bash
 
 # The utils.sh script is required to use the following functions: 
 # bytes_to_readable_format, get_size

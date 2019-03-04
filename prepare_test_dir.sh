@@ -1,4 +1,4 @@
-#/bin/bash
+#! /bin/bash
 
 # prepare_subdir creates 48 files whose filenames vary according to have or not capital letters in
 # basenames or extensions, having or not not english characters in basenames, having or not spaces

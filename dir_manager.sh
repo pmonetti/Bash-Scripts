@@ -1,4 +1,4 @@
-#/bin/bash
+#! /bin/bash
 
 # The utils.sh script is required to use the following functions:
 # invalid_dir_path, is_relative_path, keep_english_chars,

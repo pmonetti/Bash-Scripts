@@ -1,4 +1,4 @@
-#/bin/bash
+#! /bin/bash
 
 CURRENT_PROFILE=$(pacmd list-cards | grep "active profile" | cut -d ' ' -f 3-)
 

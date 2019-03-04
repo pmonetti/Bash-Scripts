@@ -1,4 +1,4 @@
-#!/bin/sh
+#! /bin/bash
 
 GOOGLE_INSTALLER_PATH=~/google-chrome-stable_current_amd64.deb
 
