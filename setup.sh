@@ -11,7 +11,7 @@ sudo apt-get update || exit 1
 sudo apt-get install -y \
 						yakuake geany htop \
 						tree gparted baobab \
-						git \
+						git kompare\
 						vlc \
 						openvpn \
 						|| exit 1
