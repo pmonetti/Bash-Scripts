@@ -15,6 +15,8 @@ sudo apt-get install -y \
 						vlc \
 						openvpn \
 						|| exit 1
+						
+sudo snap install spotify || exit 1
 
 sudo dpkg -i $GOOGLE_INSTALLER_PATH || exit 1
 sudo apt-get install -f -y || exit 1
