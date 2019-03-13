@@ -11,9 +11,10 @@ sudo apt-get update || exit 1
 sudo apt-get install -y \
 						yakuake geany htop \
 						tree gparted baobab \
-						git kompare\
+						git kompare curl\
 						vlc \
 						openvpn \
+						virtualbox \
 						|| exit 1
 						
 sudo snap install spotify || exit 1
