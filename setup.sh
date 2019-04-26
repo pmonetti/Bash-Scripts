@@ -32,3 +32,14 @@ fi
 
 # Load XFCE panel
 ~/Bash-Scripts/load_xfce_panel.sh || exit 1
+
+# Add yakuake to startup
+mkdir -p ~/.config/autostart/ || exit 1
+rm -f ~/.config/autostart/yakuake.desktop
+cat << EOF >> ~/.config/autostart/yakuake.desktop
+[Desktop Entry]
+Type=Application
+Exec=/usr/bin/yakuake
+Name=yakuake
+Comment=yakuake 
+EOF
